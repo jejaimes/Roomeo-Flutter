@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "817592641053",
+    "firebase_url": "https://roomeo-6acbb-default-rtdb.firebaseio.com",
+    "project_id": "roomeo-6acbb",
+    "storage_bucket": "roomeo-6acbb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817592641053:android:2117fe162bb59fe708c8f4",
+        "android_client_info": {
+          "package_name": "com.example.sprint2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817592641053-egg6u16tmdv3k3d4og5dvpnlkoh9f6lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBixtUa2TWR4nef5DF8vn2ld05FMWKxOww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817592641053-egg6u16tmdv3k3d4og5dvpnlkoh9f6lh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817592641053:android:d317d98f98f3627708c8f4",
+        "android_client_info": {
+          "package_name": "com.example.sprint2Flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817592641053-egg6u16tmdv3k3d4og5dvpnlkoh9f6lh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBixtUa2TWR4nef5DF8vn2ld05FMWKxOww"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817592641053-egg6u16tmdv3k3d4og5dvpnlkoh9f6lh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

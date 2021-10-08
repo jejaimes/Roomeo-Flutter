@@ -1,0 +1,7 @@
+#Fri Oct 08 16:47:25 COT 2021
+base.0=/Users/nico/Documents/App/sprint2/sprint2/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+path.1=classes2.dex
+renamed.1=classes2.dex
+path.0=classes.dex
+renamed.0=classes.dex
+base.1=/Users/nico/Documents/App/sprint2/sprint2/build/app/intermediates/dex/debug/mergeDexDebug/classes2.dex
