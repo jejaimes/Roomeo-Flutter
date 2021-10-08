@@ -4,7 +4,11 @@
     "type": "PROCESSED_RES",
     "kind": "Directory"
   },
+<<<<<<< HEAD
   "applicationId": "com.example.sprint2",
+=======
+  "applicationId": "com.example.sprint2Flutter",
+>>>>>>> devNicolas
   "variantName": "processDebugResources",
   "elements": [
     {

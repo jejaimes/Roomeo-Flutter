@@ -4,7 +4,11 @@
     "type": "MERGED_MANIFESTS",
     "kind": "Directory"
   },
+<<<<<<< HEAD
   "applicationId": "com.example.sprint2",
+=======
+  "applicationId": "com.example.sprint2Flutter",
+>>>>>>> devNicolas
   "variantName": "debug",
   "elements": [
     {
