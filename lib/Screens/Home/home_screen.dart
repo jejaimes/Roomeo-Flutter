@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint2/Screens/Login/components/body.dart';
+import 'package:sprint2/Screens/ReservaSalon/reservarSalon.dart';
+import 'package:sprint2/Screens/ViewPerBuilding/viewPerBuilding.dart';
 import 'package:sprint2/components/BuildingButton.dart';
 import 'package:sprint2/components/IngButton.dart';
 import 'package:sprint2/constraints.dart';
@@ -37,10 +39,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   List<Widget> _widgetOptions = <Widget>[
     Edificios(optionStyle: optionStyle),
     HandWash(optionStyle: optionStyle),
-    Text(
-      'Soon!\nReserve in groups',
-      style: optionStyle,
-    ),
+    ReservarSalonWidget(),
     Text(
       'Scan Code',
       style: optionStyle,
@@ -126,44 +125,74 @@ class Edificios extends StatelessWidget {
           days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
     });
 
-    DateTime hoy=DateTime.now();
+    DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);
     return Column(children: <Widget>[
-       TextField(
-              enabled: false,
-              decoration: InputDecoration(
-              labelText: "La fecha de hoy es: "+formattedDate,
-              fillColor: kPrimaryLightColor,
-              labelStyle: TextStyle(color: Colors.black),
-            )),
-            SizedBox(height: 20),
+      TextField(
+          enabled: false,
+          decoration: InputDecoration(
+            labelText: "La fecha de hoy es: " + formattedDate,
+            fillColor: kPrimaryLightColor,
+            labelStyle: TextStyle(color: Colors.black),
+          )),
+      SizedBox(height: 20),
       BuildingButton(
         text: 'ML',
-        press: () {},
+        press: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ViewPerBuildingWidget(
+              building: 'ML',
+            );
+          }));
+        },
         codigo: "ML",
       ),
       SizedBox(height: 20),
       BuildingButton(
         text: 'W',
-        press: () {},
+        press: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ViewPerBuildingWidget(
+              building: 'W',
+            );
+          }));
+        },
         codigo: "W",
       ),
       SizedBox(height: 20),
       BuildingButton(
         text: 'C',
-        press: () {},
+        press: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ViewPerBuildingWidget(
+              building: 'C',
+            );
+          }));
+        },
         codigo: "C",
       ),
       SizedBox(height: 20),
       BuildingButton(
         text: 'RGD',
-        press: () {},
+        press: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ViewPerBuildingWidget(
+              building: 'RGD',
+            );
+          }));
+        },
         codigo: "RGD",
       ),
       SizedBox(height: 20),
       BuildingButton(
         text: 'SD',
-        press: () {},
+        press: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ViewPerBuildingWidget(
+              building: 'SD',
+            );
+          }));
+        },
         codigo: "SD",
       ),
     ]);

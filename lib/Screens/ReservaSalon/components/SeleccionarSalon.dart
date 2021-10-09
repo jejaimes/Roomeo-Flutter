@@ -5,7 +5,8 @@ import 'package:sprint2/Screens/ViewPerBuilding/viewPerBuilding.dart';
 
 class SeleccionarSalon extends StatefulWidget {
   final DateTime? dateTime;
-  const SeleccionarSalon({Key? key, this.dateTime}) : super(key: key);
+  final List<Classroom>? classroms;
+  SeleccionarSalon({Key? key, this.dateTime, this.classroms}) : super(key: key);
 
   @override
   _SeleccionarSalonState createState() => _SeleccionarSalonState();
@@ -14,10 +15,6 @@ class SeleccionarSalon extends StatefulWidget {
 class _SeleccionarSalonState extends State<SeleccionarSalon> {
   CollectionReference reservas =
       FirebaseFirestore.instance.collection('reserves');
-  final _classroms = <Classroom>[
-    Classroom(603, 40, 5, 'B'),
-    Classroom(604, 40, 10, 'B')
-  ];
 
   Widget _buildRow(Classroom salon) {
     return ListTile(
@@ -41,9 +38,9 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
   Widget _buildClassooms() {
     return ListView.separated(
       padding: const EdgeInsets.all(8),
-      itemCount: _classroms.length,
+      itemCount: widget.classroms!.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildRow(_classroms[index]);
+        return _buildRow(widget.classroms![index]);
       },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
@@ -67,20 +64,31 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
 
   Widget _btnReservarSalon(Classroom salon) {
     return OutlinedButton(
-      onPressed: () => showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text('${salon.building} - ${salon.number}'),
-          content: Text(
-              'Reserva exitosa para el ${widget.dateTime!.day} de ${widget.dateTime!.month} a las ${widget.dateTime!.hour}'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      ),
+      onPressed: () {
+        reservas.add({
+          'day': widget.dateTime!.day,
+          'hour': widget.dateTime!.hour,
+          'minute': widget.dateTime!.minute,
+          'month': widget.dateTime!.month,
+          'name': 'st.goat@uniandes.edu.co',
+          'room': '${salon.building} - ${salon.number}',
+          'year': widget.dateTime!.year
+        });
+        showDialog<String>(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text('${salon.building} - ${salon.number}'),
+            content: Text(
+                'Reserva exitosa para el ${widget.dateTime!.day} de ${widget.dateTime!.month} a las ${widget.dateTime!.hour}'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      },
       child: const Text('Reservar'),
     );
   }
