@@ -36,6 +36,7 @@ class Body extends StatelessWidget {
       users
           .add({
             'Faculty': faculty,
+            'LastHW': DateTime.now().millisecondsSinceEpoch,
             'Login': email,
             'Name': name,
             'UniandesID': id,
