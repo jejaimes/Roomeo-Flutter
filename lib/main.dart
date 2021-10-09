@@ -30,6 +30,11 @@ class MyApp extends StatelessWidget {
 
 class LandingPage extends StatelessWidget {
 
+<<<<<<< HEAD
+=======
+  final Future<FirebaseApp> _initialization=Firebase.initializeApp();
+  
+>>>>>>> devNicolas
 
   final Future<FirebaseApp> _initialization=Firebase.initializeApp();
   
