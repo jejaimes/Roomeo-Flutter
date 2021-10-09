@@ -175,7 +175,9 @@ class Body extends StatelessWidget {
                 }
               }),
           SizedBox(height: 20),
-          IngButton(text: "Return", press: () {}),
+          IngButton(text: "Return", press: () {
+            Navigator.pop(context);
+          }),
         ],
       ),
     ));
