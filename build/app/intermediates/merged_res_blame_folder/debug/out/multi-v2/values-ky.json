@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/nico/Documents/App/sprint2/sprint2/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-ky/values-ky.xml",
+            "outputFile": "/Users/nico/Documents/App/devNicolas/flutter/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-ky/values-ky.xml",
             "map": [
                 {
                     "source": "/Users/nico/.gradle/caches/transforms-2/files-2.1/001635284da1a814e161dec16473b699/jetified-play-services-basement-17.1.0/res/values-ky/values.xml",

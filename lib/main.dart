@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
 class LandingPage extends StatelessWidget {
 
   final Future<FirebaseApp> _initialization=Firebase.initializeApp();
+  
 
   @override
   Widget build(BuildContext context) {

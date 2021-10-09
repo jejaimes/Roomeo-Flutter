@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/nico/Documents/App/sprint2/sprint2/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+            "outputFile": "/Users/nico/Documents/App/devNicolas/flutter/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
             "map": [
                 {
                     "source": "/Users/nico/.gradle/caches/transforms-2/files-2.1/001635284da1a814e161dec16473b699/jetified-play-services-basement-17.1.0/res/values/values.xml",
@@ -40,7 +40,7 @@
                     }
                 },
                 {
-                    "source": "/Users/nico/Documents/App/sprint2/sprint2/build/app/generated/res/google-services/debug/values/values.xml",
+                    "source": "/Users/nico/Documents/App/devNicolas/flutter/build/app/generated/res/google-services/debug/values/values.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -95,7 +95,7 @@
                     }
                 },
                 {
-                    "source": "/Users/nico/Documents/App/sprint2/sprint2/android/app/src/main/res/values/styles.xml",
+                    "source": "/Users/nico/Documents/App/devNicolas/flutter/android/app/src/main/res/values/styles.xml",
                     "from": {
                         "startLines": "3,14",
                         "startColumns": "4,4",

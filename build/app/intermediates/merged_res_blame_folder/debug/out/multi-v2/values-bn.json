@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/nico/Documents/App/sprint2/sprint2/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-bn/values-bn.xml",
+            "outputFile": "/Users/nico/Documents/App/devNicolas/flutter/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-bn/values-bn.xml",
             "map": [
                 {
                     "source": "/Users/nico/.gradle/caches/transforms-2/files-2.1/0b5a5b09e796e23878a3527a434a4a63/core-1.1.0/res/values-bn/values-bn.xml",
