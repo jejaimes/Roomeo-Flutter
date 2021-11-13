@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: BuildingViewModel()),
@@ -26,9 +24,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Auth',
         theme: ThemeData(
-          primaryColor: kPrimaryColor,
-          scaffoldBackgroundColor: Colors.white
-        ),
+            primaryColor: kPrimaryColor, scaffoldBackgroundColor: Colors.white),
         home: LandingPage(),
       ),
     );
@@ -36,57 +32,51 @@ class MyApp extends StatelessWidget {
 }
 
 class LandingPage extends StatelessWidget {
+  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
-
-  final Future<FirebaseApp> _initialization=Firebase.initializeApp();
-  
   @override
   Widget build(BuildContext context) {
     // SOLO EN MODO TEST HACEMOS SIGN OUT ANTES DE EMEPEZAR
     return FutureBuilder(
       future: _initialization,
-      builder: (context, snapshot){
-        if(snapshot.hasError){
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
           return Scaffold(
             body: Center(
               child: Text("Error: " + snapshot.error.toString()),
-              ),
+            ),
           );
         }
 
-        if(snapshot.connectionState==ConnectionState.done){
+        if (snapshot.connectionState == ConnectionState.done) {
           return StreamBuilder(
-            
             stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot){
-              if(snapshot.connectionState== ConnectionState.active){
-                Object? user=snapshot.data;
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.active) {
+                Object? user = snapshot.data;
 
-                if(user ==null){
+                if (user == null) {
                   return WelcomeScreen();
-                }else{
+                } else {
                   return HomeScreen();
                 }
-              }else{
-
+              } else {
                 return Scaffold(
-                  body: Center(child: Text("Cargando la app"),),
+                  body: Center(
+                    child: Text("Cargando la app"),
+                  ),
                 );
               }
-
             },
           );
         }
 
         return Scaffold(
-            body: Center(
-              child: Text("Connecting to the app") ,
-              ),
+          body: Center(
+            child: Text("Connecting to the app"),
+          ),
         );
-
-
       },
     );
   }
 }
-

@@ -1,13 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sprint2/Models/apis/api_response.dart';
-import 'package:sprint2/View/Screens/Login/components/body.dart';
 import 'package:sprint2/View/Screens/ReservaSalon/reservarSalon.dart';
-import 'package:sprint2/View/Screens/ViewPerBuilding/viewPerBuilding.dart';
-import 'package:sprint2/View/components/BuildingButton.dart';
 import 'package:sprint2/View/components/IngButton.dart';
 import 'package:sprint2/View/components/BuildingButtons.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
@@ -124,8 +119,8 @@ class Edificios extends StatelessWidget {
         .collection('Users')
         .doc(currentUser!.email)
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      lastHW = int.parse(documentSnapshot.data()["LastHW"]);
+        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      lastHW = int.parse(documentSnapshot.data()!["LastHW"]);
       lastHW = tiempo - lastHW;
       timeLastHW = new Duration(
           days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);

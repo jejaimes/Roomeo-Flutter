@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:sprint2/View/Screens/Home/home_screen.dart';
 import 'package:sprint2/View/Screens/Login/login_screen.dart';
 import 'package:sprint2/View/Screens/Welcome/components/background.dart';
 import 'package:sprint2/View/components/IngButton.dart';
@@ -175,9 +174,11 @@ class Body extends StatelessWidget {
                 }
               }),
           SizedBox(height: 20),
-          IngButton(text: "Return", press: () {
-            Navigator.pop(context);
-          }),
+          IngButton(
+              text: "Return",
+              press: () {
+                Navigator.pop(context);
+              }),
         ],
       ),
     ));
