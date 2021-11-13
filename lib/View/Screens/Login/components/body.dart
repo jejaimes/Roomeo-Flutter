@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint2/View/Screens/Home/home_screen.dart';
-import 'package:sprint2/View/Screens/Login/login_screen.dart';
 import 'package:sprint2/View/Screens/Register/register_screen.dart';
 import 'package:sprint2/View/Screens/Welcome/components/background.dart';
 import 'package:sprint2/View/components/IngButton.dart';
@@ -10,7 +9,6 @@ import 'package:sprint2/constraints.dart';
 class Body extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
 
   //Function to signIn
   Future<void> _signIn(email, password, context) async {

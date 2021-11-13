@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:sprint2/Models/building_model.dart';
 import 'package:sprint2/View/Screens/ReservaSalon/components/SeleccionarSalon.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sprint2/View/Screens/ViewPerBuilding/viewPerBuilding.dart';
 
 class ReservarSalonWidget extends StatefulWidget {
   @override
@@ -42,9 +41,10 @@ class _ReservarSalonWidgetState extends State<ReservarSalonWidget> {
         if (snapshot.connectionState == ConnectionState.done) {
           print(snapshot.data!.docs);
           snapshot.data!.docs.map((e) {
-            String building = e.get('Name');
             e.get('classrooms').map((obj) => _classroms.add(Classroom(
-                number: obj['number'], maxCap: obj['maxCap'], currentCap: obj['currentCap'])));
+                number: obj['number'],
+                maxCap: obj['maxCap'],
+                currentCap: obj['currentCap'])));
           });
           return Scaffold(
             appBar: AppBar(

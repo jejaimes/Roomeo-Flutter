@@ -1,9 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meta/meta.dart';
-
-import 'package:http/http.dart' as http;
 
 import '../building_model.dart';
 
@@ -14,8 +9,9 @@ class BuildingService {
     await FirebaseFirestore.instance
         .collection('Buildings')
         .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
+        .then((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+      querySnapshot.docs
+          .forEach((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
         building = Building.fromJson(doc.data());
         buildingsList.add(building);
       });

@@ -2,7 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sprint2/Models/building_model.dart';
-import 'package:sprint2/View/Screens/ViewPerBuilding/viewPerBuilding.dart';
 
 class SeleccionarSalon extends StatefulWidget {
   final DateTime? dateTime;

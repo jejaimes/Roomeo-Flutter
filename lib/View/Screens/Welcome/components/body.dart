@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:sprint2/View/Screens/Login/login_screen.dart';
 import 'package:sprint2/View/Screens/Welcome/components/background.dart';
 import 'package:sprint2/View/components/IngButton.dart';
-import 'package:sprint2/constraints.dart';
 
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Background(
-        child:  SingleChildScrollView(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+        child: SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
           Positioned(
             child: Image.asset("assets/images/logo.png"),
           ),
@@ -26,22 +25,19 @@ class Body extends StatelessWidget {
           ),
           SizedBox(height: 50),
           IngButton(
-            text: "Ingresar",
-            press:(){
-              Navigator.push(
-                context, 
-                MaterialPageRoute(
-                  builder: (context){
-                    return LoginScreen();
+              text: "Ingresar",
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return LoginScreen();
                     },
                   ),
                 );
-              }
-            ),
-          
-              ],
-            ),
-        ));
+              }),
+        ],
+      ),
+    ));
   }
 }
-
