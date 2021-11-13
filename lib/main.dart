@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:sprint2/Screens/Welcome/welcome_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:sprint2/View/Screens/Welcome/welcome_screen.dart';
 import 'package:sprint2/constraints.dart';
 
-import 'Screens/Home/home_screen.dart';
+import 'View/Screens/Home/home_screen.dart';
+import 'View_Models/building_viewModel.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,14 +18,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Auth',
-      theme: ThemeData(
-        primaryColor: kPrimaryColor,
-        scaffoldBackgroundColor: Colors.white
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: BuildingViewModel()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Auth',
+        theme: ThemeData(
+          primaryColor: kPrimaryColor,
+          scaffoldBackgroundColor: Colors.white
+        ),
+        home: LandingPage(),
       ),
-      home: LandingPage(),
     );
   }
 }
