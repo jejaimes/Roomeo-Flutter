@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/Welcome/welcome_screen.dart';
+import 'package:sprint2/View_Models/qr_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 
 import 'View/Screens/Home/home_screen.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: BuildingViewModel()),
+        ChangeNotifierProvider.value(value: QRViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
