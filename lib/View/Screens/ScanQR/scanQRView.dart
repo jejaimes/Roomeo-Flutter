@@ -36,105 +36,123 @@ class _ScanQRViewState extends State<ScanQRView> {
   }
 
   Widget _codeScanned(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Expanded(
-            flex: 10,
-            child: result != null
-                ? AlertDialog(
-                    title: const Text('Entrar al salon?'),
-                    content: SingleChildScrollView(
-                      child: ListBody(
+    return result != null
+        ? AlertDialog(
+            title: const Text('Registrar ingreso al salón'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Seguro que desea entrar al salón ${result!.code}?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: const Text('Aceptar'),
+                onPressed: () {
+                  List<String> res = result!.code!.split('-');
+                  Provider.of<QRViewModel>(context, listen: false)
+                      .addPersonToRoom(res[0], int.parse(res[1]))
+                      .then((res) => ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              duration: Duration(milliseconds: 2000),
+                              content: Text(res))));
+                  setState(() {
+                    controller!.stopCamera();
+                    result = null;
+                  });
+                },
+              ),
+              TextButton(
+                child: const Text('Cancelar'),
+                onPressed: () {
+                  print('Cancelar escaneo');
+                  setState(() {
+                    controller!.stopCamera();
+                    result = null;
+                  });
+                },
+              ),
+            ],
+          )
+        : Column(
+            children: <Widget>[
+              Expanded(flex: 10, child: _buildQrView(context)),
+              Expanded(
+                flex: 1,
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                              'Seguro que desea entrar al salon ${result!.code}?'),
+                          Container(
+                            margin: const EdgeInsets.all(4),
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            kPrimaryColor)),
+                                onPressed: () async {
+                                  await controller?.toggleFlash();
+                                  setState(() {});
+                                },
+                                child: FutureBuilder(
+                                  future: controller?.getFlashStatus(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.data != null) {
+                                      return (snapshot.data as bool)
+                                          ? Icon(
+                                              Icons.flashlight_off_rounded,
+                                              semanticLabel: 'Flash Off',
+                                              color: Colors.black,
+                                            )
+                                          : Icon(
+                                              Icons.flashlight_on_rounded,
+                                              semanticLabel: 'Flash On',
+                                              color: Colors.black,
+                                            );
+                                    } else {
+                                      return const Icon(
+                                        Icons.flashlight_on_rounded,
+                                        semanticLabel: 'Flash On',
+                                        color: Colors.black,
+                                      );
+                                    }
+                                  },
+                                )),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.all(8),
+                            child: ElevatedButton(
+                                style: ButtonStyle(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            kPrimaryColor)),
+                                onPressed: () async {
+                                  await controller?.flipCamera();
+                                  setState(() {});
+                                },
+                                child: FutureBuilder(
+                                  future: controller?.getCameraInfo(),
+                                  builder: (context, snapshot) {
+                                    return Icon(Icons.flip_camera_ios_rounded,
+                                        semanticLabel: 'Flip camera',
+                                        color: Colors.black);
+                                  },
+                                )),
+                          )
                         ],
                       ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Aceptar'),
-                        onPressed: () {
-                          List<String> res = result!.code!.split('-');
-                          Provider.of<QRViewModel>(context, listen: false)
-                              .addPersonToRoom(res[0], int.parse(res[1]));
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Cancelar'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
                     ],
-                  )
-                : _buildQrView(context)),
-        Expanded(
-          flex: 1,
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.all(4),
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  kPrimaryColor)),
-                          onPressed: () async {
-                            await controller?.toggleFlash();
-                            setState(() {});
-                          },
-                          child: FutureBuilder(
-                            future: controller?.getFlashStatus(),
-                            builder: (context, snapshot) {
-                              return Text(
-                                'Flash: ${snapshot.data}',
-                                style:
-                                    const TextStyle(color: Color(0xFF000000)),
-                              );
-                            },
-                          )),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(8),
-                      child: ElevatedButton(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  kPrimaryColor)),
-                          onPressed: () async {
-                            await controller?.flipCamera();
-                            setState(() {});
-                          },
-                          child: FutureBuilder(
-                            future: controller?.getCameraInfo(),
-                            builder: (context, snapshot) {
-                              if (snapshot.data != null) {
-                                return Text(
-                                  'Camera facing ${describeEnum(snapshot.data!)}',
-                                  style:
-                                      const TextStyle(color: Color(0xFF000000)),
-                                );
-                              } else {
-                                return const Text('loading');
-                              }
-                            },
-                          )),
-                    )
-                  ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
+              )
+            ],
+          );
   }
 
   Widget _buildQrView(BuildContext context) {
@@ -174,7 +192,7 @@ class _ScanQRViewState extends State<ScanQRView> {
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-            content: Text('No se tiene permiso para usar la camara')),
+            content: Text('No se tiene permiso para usar la cámara')),
       );
     }
   }

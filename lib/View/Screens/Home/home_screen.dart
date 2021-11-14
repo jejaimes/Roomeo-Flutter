@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:sprint2/View/Screens/ReservaSalon/reservarSalon.dart';
 import 'package:sprint2/View/Screens/ScanQR/scanQRView.dart';
 import 'package:sprint2/View/components/IngButton.dart';
