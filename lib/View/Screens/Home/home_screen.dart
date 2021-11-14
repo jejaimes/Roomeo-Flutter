@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/ReservaSalon/reservarSalon.dart';
+import 'package:sprint2/View/Screens/ScanQR/scanQRView.dart';
 import 'package:sprint2/View/components/IngButton.dart';
 import 'package:sprint2/View/components/BuildingButtons.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
@@ -41,10 +42,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     Edificios(optionStyle: optionStyle),
     HandWash(optionStyle: optionStyle),
     ReservarSalonWidget(),
-    Text(
-      'Scan Code',
-      style: optionStyle,
-    ),
+    ScanQRView(),
   ];
 
   void _onItemTapped(int index) {
