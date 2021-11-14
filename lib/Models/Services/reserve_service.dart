@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../reserve_model.dart';
 
 class ReserveService {
-  CollectionReference<Map<String, dynamic>> _reserves =
+  late CollectionReference<Map<String, dynamic>> _reserves =
       FirebaseFirestore.instance.collection('reserves');
   final StreamController<List<Reserve>> _controller =
       StreamController<List<Reserve>>.broadcast();

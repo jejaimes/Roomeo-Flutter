@@ -6,6 +6,7 @@ import 'package:sprint2/View/Screens/ViewPerBuilding/viewPerBuilding.dart';
 import 'package:sprint2/View/components/BuildingButton.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
+import 'package:sprint2/constraints.dart';
 
 import 'BuildingButton.dart';
 
@@ -42,7 +43,7 @@ class BuidlingButtons extends StatelessWidget {
         ));
         buildingsWidget.add(SizedBox(height: 20));
       });
-      return Column(
+      return ListView(
         children: buildingsWidget,
       );
     } else {
@@ -51,7 +52,9 @@ class BuidlingButtons extends StatelessWidget {
         children: [
           Text('Cargando edificios...'),
           Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              backgroundColor: kPrimaryColor,
+            ),
           )
         ],
       );

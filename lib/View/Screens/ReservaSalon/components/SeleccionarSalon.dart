@@ -5,14 +5,17 @@ import 'package:sprint2/Models/building_model.dart';
 
 class SeleccionarSalon extends StatefulWidget {
   final DateTime? dateTime;
-  final List<Classroom>? classroms;
-  SeleccionarSalon({Key? key, this.dateTime, this.classroms}) : super(key: key);
+  SeleccionarSalon({Key? key, this.dateTime}) : super(key: key);
 
   @override
   _SeleccionarSalonState createState() => _SeleccionarSalonState();
 }
 
 class _SeleccionarSalonState extends State<SeleccionarSalon> {
+  CollectionReference buildings =
+      FirebaseFirestore.instance.collection('Buildings');
+  final _classroms = <Classroom>[];
+
   CollectionReference reservas =
       FirebaseFirestore.instance.collection('reserves');
 
@@ -21,7 +24,8 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
       title: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
-          Text(salon.number.toString()),
+          Text(salon.number
+              .toString()), //Text(salon.building + salon.number.toString()),
           const Divider(),
           Text('${salon.maxCap}'),
           const Icon(
@@ -38,9 +42,9 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
   Widget _buildClassooms() {
     return ListView.separated(
       padding: const EdgeInsets.all(8),
-      itemCount: widget.classroms!.length,
+      itemCount: _classroms.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildRow(widget.classroms![index]);
+        return _buildRow(_classroms[index]);
       },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
@@ -71,13 +75,14 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
           'minute': widget.dateTime!.minute,
           'month': widget.dateTime!.month,
           'name': 'st.goat@uniandes.edu.co',
-          'room': '${salon.number}',
+          'room': '${salon.number}', //'${salon.building} - ${salon.number}',
           'year': widget.dateTime!.year
         });
         showDialog<String>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: Text('${salon.number}'),
+            title: Text(
+                '${salon.number}'), //Text('${salon.building} - ${salon.number}'),
             content: Text(
                 'Reserva exitosa para el ${widget.dateTime!.day} de ${widget.dateTime!.month} a las ${widget.dateTime!.hour}'),
             actions: <Widget>[

@@ -7,6 +7,7 @@ import 'package:sprint2/constraints.dart';
 
 import 'View/Screens/Home/home_screen.dart';
 import 'View_Models/building_viewModel.dart';
+import 'View_Models/reserve_viewModel.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: BuildingViewModel()),
+        ChangeNotifierProvider.value(value: ReserveViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -62,10 +64,17 @@ class LandingPage extends StatelessWidget {
                 }
               } else {
                 return Scaffold(
-                  body: Center(
-                    child: Text("Cargando la app"),
-                  ),
-                );
+                    body: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('Cargando la app...'),
+                    Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: Colors.teal,
+                      ),
+                    )
+                  ],
+                ));
               }
             },
           );
@@ -73,8 +82,17 @@ class LandingPage extends StatelessWidget {
 
         return Scaffold(
           body: Center(
-            child: Text("Connecting to the app"),
-          ),
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text('Conectnadose a la app...'),
+              Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.teal,
+                ),
+              )
+            ],
+          )),
         );
       },
     );
