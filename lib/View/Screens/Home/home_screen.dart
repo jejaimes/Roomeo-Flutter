@@ -7,6 +7,7 @@ import 'package:sprint2/View/Screens/ScanQR/scanQRView.dart';
 import 'package:sprint2/View/components/IngButton.dart';
 import 'package:sprint2/View/components/BuildingButtons.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
+import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 import 'package:intl/intl.dart';
 
@@ -124,6 +125,8 @@ class Edificios extends StatelessWidget {
       timeLastHW = new Duration(
           days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
     });
+    Provider.of<UserViewModel>(context, listen: false)
+        .setEmail(currentUser!.email!);
 
     DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);

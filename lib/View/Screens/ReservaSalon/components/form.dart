@@ -92,7 +92,7 @@ class _InitialFormState extends State<InitialForm> {
                     borderSide: BorderSide(color: Color(0xFFF60000))),
               ),
               validator: (String? value) {
-                if (value!.isEmpty) {
+                if (value!.trimRight().isEmpty) {
                   return 'No se seleccionó una fecha.';
                 }
                 return null;
@@ -160,13 +160,16 @@ class _InitialFormState extends State<InitialForm> {
               onPressed: () {
                 if (this._key.currentState!.validate()) {
                   _key.currentState!.save();
+                  var amOrPm = _data.time.split(' ')[1];
                   var fecha = _data.date.split('-');
                   var hora = _data.time.split(' ')[0].split(':');
                   DateTime fechaReserva = DateTime(
                       int.parse(fecha[2]),
                       int.parse(fecha[1]),
                       int.parse(fecha[0]),
-                      int.parse(hora[0]),
+                      amOrPm == 'AM'
+                          ? int.parse(hora[0])
+                          : int.parse(hora[0]) + 12,
                       int.parse(hora[1]));
                   print(fechaReserva);
                   _seleccionarSalon(fechaReserva);
