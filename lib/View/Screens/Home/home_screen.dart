@@ -56,6 +56,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Roomeo'),
+        backgroundColor: kPrimaryDarkColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.more_horiz),
@@ -72,22 +73,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.clean_hands),
             label: 'Handwash',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Group',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt),
             label: 'ScanQR',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
         ],
         currentIndex: _selectedIndex,
@@ -127,14 +128,18 @@ class Edificios extends StatelessWidget {
     DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);
     return Column(children: <Widget>[
-      TextField(
-          enabled: false,
-          decoration: InputDecoration(
-            labelText: "La fecha de hoy es: " + formattedDate,
-            fillColor: kPrimaryLightColor,
-            labelStyle: TextStyle(color: Colors.black),
+      Expanded(
+          flex: 2,
+          child: Container(
+            child: TextField(
+                enabled: false,
+                decoration: InputDecoration(
+                  labelText: "La fecha de hoy es: " + formattedDate,
+                  fillColor: kPrimaryLightColor,
+                  labelStyle: TextStyle(color: Colors.black),
+                )),
           )),
-      SizedBox(height: 20),
+      //Expanded(child: SizedBox(height: 20)),
       /*BuildingButton(
         text: 'ML',
         press: () {

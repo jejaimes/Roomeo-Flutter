@@ -1,46 +1,37 @@
 // ignore: import_of_legacy_library_into_null_safe
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:sprint2/Models/building_model.dart';
+import 'package:provider/provider.dart';
+import 'package:sprint2/View/Screens/ReservaSalon/components/loading.dart';
+import 'package:sprint2/View_Models/seleccionarSalon_viewModel.dart';
+import 'package:sprint2/View_Models/user_viewModel.dart';
+import 'package:sprint2/constraints.dart';
 
 class SeleccionarSalon extends StatefulWidget {
   final DateTime? dateTime;
-  final List<Classroom>? classroms;
-  SeleccionarSalon({Key? key, this.dateTime, this.classroms}) : super(key: key);
+  SeleccionarSalon({Key? key, this.dateTime}) : super(key: key);
 
   @override
   _SeleccionarSalonState createState() => _SeleccionarSalonState();
 }
 
 class _SeleccionarSalonState extends State<SeleccionarSalon> {
-  CollectionReference reservas =
-      FirebaseFirestore.instance.collection('reserves');
-
-  Widget _buildRow(Classroom salon) {
+  Widget _buildRow(String salon) {
     return ListTile(
-      title: ListView(
-        scrollDirection: Axis.horizontal,
+      title: Row(
         children: <Widget>[
-          Text(salon.number.toString()),
-          const Divider(),
-          Text('${salon.maxCap}'),
-          const Icon(
-            Icons.person_rounded,
-            size: 24,
-          ),
-          const Divider(),
-          _btnReservarSalon(salon)
+          Expanded(child: Text(salon)),
+          Expanded(child: Container(child: _btnReservarSalon(salon)))
         ],
       ),
     );
   }
 
-  Widget _buildClassooms() {
+  Widget _buildClassooms(List<String> classroms) {
     return ListView.separated(
       padding: const EdgeInsets.all(8),
-      itemCount: widget.classroms!.length,
+      itemCount: classroms.length,
       itemBuilder: (BuildContext context, int index) {
-        return _buildRow(widget.classroms![index]);
+        return _buildRow(classroms[index]);
       },
       separatorBuilder: (BuildContext context, int index) => const Divider(),
     );
@@ -48,44 +39,75 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
 
   @override
   Widget build(BuildContext context) {
+    var selectClassrooms = context.watch<SeleccionarsalonViewModel>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reservar salón'),
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        flexibleSpace: Image.asset(
-          "assets/images/W.png",
-          fit: BoxFit.cover,
-        ),
+        title: const Text('Seleccionar salón'),
+        backgroundColor: kPrimaryDarkColor,
       ),
-      body: _buildClassooms(),
+      body: (selectClassrooms.classrooms.isNotEmpty)
+          ? _buildClassooms(selectClassrooms.classrooms)
+          : Builder(builder: (BuildContext context) {
+              print({'desde SeleccionarSalon', selectClassrooms.classrooms});
+              return LoadingWidget();
+            }),
     );
   }
 
-  Widget _btnReservarSalon(Classroom salon) {
+  Widget _btnReservarSalon(String salon) {
     return OutlinedButton(
       onPressed: () {
-        reservas.add({
-          'day': widget.dateTime!.day,
-          'hour': widget.dateTime!.hour,
-          'minute': widget.dateTime!.minute,
-          'month': widget.dateTime!.month,
-          'name': 'st.goat@uniandes.edu.co',
-          'room': '${salon.number}',
-          'year': widget.dateTime!.year
-        });
         showDialog<String>(
           context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text('${salon.number}'),
-            content: Text(
-                'Reserva exitosa para el ${widget.dateTime!.day} de ${widget.dateTime!.month} a las ${widget.dateTime!.hour}'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
+          builder: (BuildContext context1) => MultiProvider(
+            providers: [
+              ChangeNotifierProvider.value(
+                  value: Provider.of<UserViewModel>(context)),
             ],
+            child: AlertDialog(
+              title: const Text('Seleccionar salón'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Seguro que desea reservar el salón $salon?'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Aceptar'),
+                  onPressed: () {
+                    try {
+                      Provider.of<SeleccionarsalonViewModel>(context,
+                              listen: false)
+                          .reservarSalon(
+                              widget.dateTime!.day,
+                              widget.dateTime!.hour,
+                              widget.dateTime!.minute,
+                              widget.dateTime!.month,
+                              Provider.of<UserViewModel>(context, listen: false)
+                                  .getEmail(),
+                              salon,
+                              widget.dateTime!.year)
+                          .then((res) => ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(
+                                  duration: Duration(milliseconds: 2000),
+                                  content: Text(res))));
+                    } catch (e) {
+                      print(e);
+                    }
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text('Cancelar'),
+                  onPressed: () {
+                    print('Cancelar escaneo');
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

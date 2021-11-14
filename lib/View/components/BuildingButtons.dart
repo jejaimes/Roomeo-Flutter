@@ -6,6 +6,7 @@ import 'package:sprint2/View/Screens/ViewPerBuilding/viewPerBuilding.dart';
 import 'package:sprint2/View/components/BuildingButton.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
+import 'package:sprint2/constraints.dart';
 
 import 'BuildingButton.dart';
 
@@ -42,19 +43,27 @@ class BuidlingButtons extends StatelessWidget {
         ));
         buildingsWidget.add(SizedBox(height: 20));
       });
-      return Column(
-        children: buildingsWidget,
-      );
+      return Expanded(
+          flex: 12,
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(6, 0, 6, 4),
+            children: buildingsWidget,
+          ));
     } else {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('Cargando edificios...'),
-          Center(
-            child: CircularProgressIndicator(),
-          )
-        ],
-      );
+      return Expanded(
+          flex: 12,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Cargando edificios...'),
+              SizedBox(height: 20),
+              Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryDarkColor,
+                ),
+              )
+            ],
+          ));
     }
   }
 }

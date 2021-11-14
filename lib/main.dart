@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/Welcome/welcome_screen.dart';
 import 'package:sprint2/View_Models/qr_viewModel.dart';
+import 'package:sprint2/View_Models/viewPerBuilding_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 
 import 'View/Screens/Home/home_screen.dart';
 import 'View_Models/building_viewModel.dart';
+import 'View_Models/reserve_viewModel.dart';
+import 'View_Models/user_viewModel.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,6 +24,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: BuildingViewModel()),
         ChangeNotifierProvider.value(value: QRViewModel()),
+        ChangeNotifierProvider.value(value: ViewPerBuildingViewModel()),
+        ChangeNotifierProvider.value(value: ReserveViewModel()),
+        ChangeNotifierProvider.value(value: UserViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -64,10 +70,17 @@ class LandingPage extends StatelessWidget {
                 }
               } else {
                 return Scaffold(
-                  body: Center(
-                    child: Text("Cargando la app"),
-                  ),
-                );
+                    body: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Cargando la app...'),
+                    Center(
+                      child: CircularProgressIndicator(
+                        color: kPrimaryDarkColor,
+                      ),
+                    )
+                  ],
+                ));
               }
             },
           );
@@ -75,8 +88,17 @@ class LandingPage extends StatelessWidget {
 
         return Scaffold(
           body: Center(
-            child: Text("Connecting to the app"),
-          ),
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Conectandose a la app...'),
+              Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryDarkColor,
+                ),
+              )
+            ],
+          )),
         );
       },
     );

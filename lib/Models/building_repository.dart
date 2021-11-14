@@ -10,6 +10,10 @@ class BuildingRepository {
     return response;
   }
 
+  Future<Building?> fetchBuildingByName(String name) {
+    return _buildingService.getBuilding(name);
+  }
+
   Future<String> addPersonToClassroom(
       String buildingName, int classroomNumber) async {
     Building? building = await _buildingService.getBuilding(buildingName);

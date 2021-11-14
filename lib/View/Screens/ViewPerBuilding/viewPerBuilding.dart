@@ -1,7 +1,10 @@
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sprint2/Models/building_model.dart';
+import 'package:sprint2/View_Models/viewPerBuilding_viewModel.dart';
+import 'package:sprint2/constraints.dart';
 
 class ViewPerBuildingWidget extends StatefulWidget {
   final String? building;
@@ -14,7 +17,7 @@ class ViewPerBuildingWidget extends StatefulWidget {
 class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
   CollectionReference buildings =
       FirebaseFirestore.instance.collection('Buildings');
-  final _classroms = <Classroom>[];
+  var _classroms = <Classroom>[];
 
   Widget _btnVerReservasSalon(Classroom salon) {
     return OutlinedButton(
@@ -25,19 +28,31 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
           content: const Text('¿Va a asistir al salón?'),
           actions: <Widget>[
             TextButton(
-              onPressed: () => Navigator.pop(context, 'Cancelar'),
-              child: const Text('Cancel'),
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () => Navigator.pop(context, 'OK'),
-              child: const Text('OK'),
+              onPressed: () {
+                Provider.of<ViewPerBuildingViewModel>(context, listen: false)
+                    .addPersonToRoom(widget.building!, salon.number)
+                    .then((res) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      duration: Duration(milliseconds: 2000),
+                      content: Text(res)));
+                  setState(() {
+                    _classroms = [];
+                  });
+                });
+              },
+              child: const Text('Aceptar'),
             ),
           ],
         ),
       ),
       child: const Text(
         'ASISTIR',
-        style: TextStyle(color: Colors.black, fontSize: 24),
+        style: TextStyle(color: Colors.black, fontSize: 20),
       ),
     );
   }
@@ -77,33 +92,42 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<DocumentSnapshot>(
-      future: buildings.doc(widget.building!).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+    return FutureBuilder<Building?>(
+      future: Provider.of<ViewPerBuildingViewModel>(context, listen: false)
+          .getBuildingByName(widget.building!),
+      builder: (BuildContext context, AsyncSnapshot<Building?> snapshot) {
         if (snapshot.hasError) {
           return Text("Something went wrong");
         }
 
-        if (snapshot.hasData && !snapshot.data!.exists) {
-          return Text("Document does not exist");
+        if (!snapshot.hasData) {
+          return Scaffold(
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(child: Text('Cargando salones...')),
+                SizedBox(height: 20),
+                Expanded(
+                    child: Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: kPrimaryDarkColor,
+                  ),
+                ))
+              ],
+            ),
+          );
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
-          final data = snapshot.data!.get('classrooms');
-          for (var item in data) {
-            Classroom room = Classroom(number: item['number'], maxCap: item['maxCap'],
-                currentCap: item['currentCap']);
-            _classroms.add(room);
-          }
-          print(_classroms);
+          _classroms = snapshot.data!.classrooms;
+          //print(_classroms);
           return Scaffold(
             appBar: AppBar(
               title: Text('${widget.building}'),
               backgroundColor: Colors.transparent,
               foregroundColor: Colors.black,
               flexibleSpace: Image.asset(
-                "assets/images/W.png",
+                "assets/images/${widget.building!.toUpperCase()}.png",
                 fit: BoxFit.cover,
               ),
             ),
@@ -111,7 +135,20 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
           );
         }
 
-        return Text("loading");
+        return Scaffold(
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(child: Text('Cargando salones...')),
+              Expanded(
+                  child: Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.teal,
+                ),
+              ))
+            ],
+          ),
+        );
       },
     );
   }
