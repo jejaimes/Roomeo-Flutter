@@ -22,4 +22,31 @@ class BuildingService {
     print(buildingsList);
     return buildingsList;
   }
+
+  Future<Building?> getBuilding(String name) async {
+    Building? building;
+    await FirebaseFirestore.instance
+        .collection('Buildings')
+        .doc(name.toUpperCase())
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      if (documentSnapshot.exists) {
+        building = Building.fromJson(documentSnapshot.data()!);
+      }
+    }).catchError((error) {
+      print('Hubo un error obteniendo el edificio: $error');
+      return Future.value(null);
+    });
+    return building;
+  }
+
+  Future<void> updateClassrooms(
+      String buildingName, List<Map<String, dynamic>> classroomList) async {
+    return await FirebaseFirestore.instance
+        .collection('Buildings')
+        .doc(buildingName.toUpperCase())
+        .update({'classrooms': classroomList})
+        .then((value) => print('Building updated'))
+        .catchError((error) => print('Failed to update the building: $error'));
+  }
 }
