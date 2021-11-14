@@ -100,6 +100,7 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
                       print(e);
                     }
                     Navigator.of(context).pop();
+                    setState(() {});
                   },
                 ),
                 TextButton(

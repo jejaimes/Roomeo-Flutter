@@ -66,7 +66,7 @@ class SeleccionarsalonViewModel extends ChangeNotifier {
         }
       }
       for (var item in building.getClassroomsExcept(exceptClassrooms)) {
-        classrooms.add('${building.name}-${item.number}');
+        classrooms.add('${building.name} - ${item.number}');
       }
       exceptClassrooms.clear();
     }

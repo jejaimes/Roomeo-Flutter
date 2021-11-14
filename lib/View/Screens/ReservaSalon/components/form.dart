@@ -161,17 +161,17 @@ class _InitialFormState extends State<InitialForm> {
                 if (this._key.currentState!.validate()) {
                   _key.currentState!.save();
                   var amOrPm = _data.time.split(' ')[1];
-                  var fecha = _data.date.split('-');
+                  var fecha = DateTime.parse(_data.date);
                   var hora = _data.time.split(' ')[0].split(':');
                   DateTime fechaReserva = DateTime(
-                      int.parse(fecha[2]),
-                      int.parse(fecha[1]),
-                      int.parse(fecha[0]),
+                      fecha.year,
+                      fecha.month,
+                      fecha.day,
                       amOrPm == 'AM'
                           ? int.parse(hora[0])
                           : int.parse(hora[0]) + 12,
                       int.parse(hora[1]));
-                  print(fechaReserva);
+                  print({'fechaReserva': fechaReserva});
                   _seleccionarSalon(fechaReserva);
                 }
               },
