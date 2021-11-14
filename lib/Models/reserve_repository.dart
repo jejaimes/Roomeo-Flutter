@@ -25,6 +25,7 @@ class ReserveRepository {
     List<Map<String, dynamic>> response = [];
     for (var reserve in apiResponse) {
       List<String> place = reserve.room.split(' - ');
+      print({'reserve at repository': reserve});
       response.add({'building': place[0], 'number': int.parse(place[1])});
     }
     return response;

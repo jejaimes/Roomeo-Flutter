@@ -48,6 +48,9 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
       body: (selectClassrooms.classrooms.isNotEmpty)
           ? _buildClassooms(selectClassrooms.classrooms)
           : Builder(builder: (BuildContext context) {
+              Provider.of<SeleccionarsalonViewModel>(context, listen: false)
+                  .getClassroomsWithNoReservesAtTime(widget.dateTime!.month,
+                      widget.dateTime!.day, widget.dateTime!.hour);
               print({'desde SeleccionarSalon', selectClassrooms.classrooms});
               return LoadingWidget();
             }),
@@ -97,6 +100,7 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
                       print(e);
                     }
                     Navigator.of(context).pop();
+                    setState(() {});
                   },
                 ),
                 TextButton(
