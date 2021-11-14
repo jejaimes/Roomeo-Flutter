@@ -17,4 +17,26 @@ class ReserveRepository {
     });
     return updatedReserves;
   }
+
+  Future<List<Map<String, dynamic>>> fetchClassroomsWithReservesAtTime(
+      int month, int day, int hour) async {
+    List<Reserve> apiResponse =
+        await _reserveService.getReservesAtTime(month, day, hour);
+    List<Map<String, dynamic>> response = [];
+    for (var reserve in apiResponse) {
+      List<String> place = reserve.room.split(' - ');
+      response.add({'building': place[0], 'number': int.parse(place[1])});
+    }
+    return response;
+  }
+
+  Future<List<Reserve>> fetchUserReserves(String name) async {
+    dynamic response = await _reserveService.getUserReserves(name);
+    response.toList();
+    return response;
+  }
+
+  Future<String> createReserve(Reserve reserve) async {
+    return await _reserveService.addReserve(reserve);
+  }
 }

@@ -39,11 +39,54 @@ class ReserveService {
     return reservesList;
   }
 
-  Future<void> addReserve(Reserve newReserve) async {
+  Future<List<Reserve>> getUserReserves(String name) async {
+    Reserve reserve;
+    List<Reserve> reservesList = [];
+    await _reserves
+        .where('name', isEqualTo: name)
+        .get()
+        .then((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+      querySnapshot.docs
+          .forEach((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+        reserve = Reserve.fromJson(doc.data());
+        reservesList.add(reserve);
+      });
+    })
+        // ignore: invalid_return_type_for_catch_error
+        .catchError((error) => {print(error)});
+
+    print(reservesList);
+    return reservesList;
+  }
+
+  Future<List<Reserve>> getReservesAtTime(int month, int day, int hour) async {
+    Reserve reserve;
+    List<Reserve> reservesList = [];
+    await _reserves
+        .where('month', isEqualTo: month)
+        .where('day', isEqualTo: day)
+        .where('hour', isGreaterThanOrEqualTo: hour)
+        .where('hour', isLessThan: hour + 3)
+        .get()
+        .then((QuerySnapshot<Map<String, dynamic>> querySnapshot) {
+      querySnapshot.docs
+          .forEach((QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+        reserve = Reserve.fromJson(doc.data());
+        reservesList.add(reserve);
+      });
+    })
+        // ignore: invalid_return_type_for_catch_error
+        .catchError((error) => {print(error)});
+
+    print(reservesList);
+    return reservesList;
+  }
+
+  Future<String> addReserve(Reserve newReserve) async {
     return await _reserves
         .add(newReserve.toJson())
-        .then((value) => print('Reserve created'))
-        .catchError((error) => print("Failed to create new reserve: $error"));
+        .then((value) => 'Reserva creada exitosamente')
+        .catchError((error) => "$error");
   }
 
   Future<void> deleteReserve(String idReserve) async {

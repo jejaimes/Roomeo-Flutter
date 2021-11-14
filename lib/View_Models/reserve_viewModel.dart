@@ -3,7 +3,7 @@ import 'package:sprint2/Models/apis/api_response.dart';
 import 'package:sprint2/Models/reserve_model.dart';
 import 'package:sprint2/Models/reserve_repository.dart';
 
-class ReserveViewModel with ChangeNotifier {
+class ReserveViewModel extends ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.loading('Fetching reserves data');
   ReserveRepository _reserveRepository = ReserveRepository();
   late Reserve _reserve;

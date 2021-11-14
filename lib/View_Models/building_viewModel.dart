@@ -3,7 +3,7 @@ import 'package:sprint2/Models/apis/api_response.dart';
 import 'package:sprint2/Models/building_model.dart';
 import 'package:sprint2/Models/building_repository.dart';
 
-class BuildingViewModel with ChangeNotifier {
+class BuildingViewModel extends ChangeNotifier {
   ApiResponse _apiResponse = ApiResponse.loading('Fetching buildings data');
 
   late Building _building;

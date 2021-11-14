@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sprint2/Models/building_model.dart';
 import 'package:sprint2/Models/building_repository.dart';
 
-class ViewPerBuildingViewModel with ChangeNotifier {
+class ViewPerBuildingViewModel extends ChangeNotifier {
   BuildingRepository _buildingRepository = BuildingRepository();
 
   ViewPerBuildingViewModel();

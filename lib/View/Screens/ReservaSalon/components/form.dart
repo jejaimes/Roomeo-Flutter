@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sprint2/View_Models/seleccionarSalon_viewModel.dart';
+import 'package:sprint2/View_Models/user_viewModel.dart';
+import 'package:sprint2/constraints.dart';
 import 'SeleccionarSalon.dart';
 
 class InitialForm extends StatefulWidget {
@@ -29,8 +33,19 @@ class _InitialFormState extends State<InitialForm> {
 
   void _seleccionarSalon(DateTime fecha) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return SeleccionarSalon(
-        dateTime: fecha,
+      SeleccionarsalonViewModel seleccionarsalonViewModel =
+          SeleccionarsalonViewModel();
+      seleccionarsalonViewModel.getClassroomsWithNoReservesAtTime(
+          fecha.month, fecha.day, fecha.hour);
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: seleccionarsalonViewModel),
+          ChangeNotifierProvider.value(
+              value: Provider.of<UserViewModel>(context)),
+        ],
+        child: SeleccionarSalon(
+          dateTime: fecha,
+        ),
       );
     }));
   }
@@ -43,7 +58,12 @@ class _InitialFormState extends State<InitialForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Por favor seleccione la fecha y hora de la reserva'),
+          Text(
+            'Por favor seleccione la fecha y hora de la reserva',
+            style: const TextStyle(
+              fontSize: 20,
+            ), //color: Color(0xFF005662),),
+          ),
           SizedBox(
             height: 30,
           ),
@@ -59,15 +79,17 @@ class _InitialFormState extends State<InitialForm> {
               controller: dateController,
               decoration: InputDecoration(
                 labelText: 'Fecha',
-                labelStyle: new TextStyle(color: Color(0xFF4FB3BF)),
+                labelStyle: new TextStyle(color: kPrimaryDarkColor),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 hintText: 'Selecciona la fecha',
                 hintStyle: new TextStyle(color: Color(0xFF005662)),
                 border: OutlineInputBorder(gapPadding: 2),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF4FB3BF), width: 2)),
+                    borderSide: BorderSide(color: kPrimaryDarkColor, width: 2)),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF4FB3BF))),
+                    borderSide: BorderSide(color: kPrimaryDarkColor)),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFF60000))),
               ),
               validator: (String? value) {
                 if (value!.isEmpty) {
@@ -102,15 +124,18 @@ class _InitialFormState extends State<InitialForm> {
               controller: timeController,
               decoration: InputDecoration(
                 labelText: 'Hora',
-                labelStyle: new TextStyle(color: Color(0xFF4FB3BF)),
+                labelStyle: new TextStyle(color: kPrimaryDarkColor),
+                //errorStyle: new TextStyle(color: Color(0xFFC2847A)),
                 floatingLabelBehavior: FloatingLabelBehavior.always,
                 hintText: 'Selecciona la hora',
                 hintStyle: new TextStyle(color: Color(0xFF005662)),
                 border: OutlineInputBorder(gapPadding: 2),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF4FB3BF), width: 2)),
+                    borderSide: BorderSide(color: kPrimaryDarkColor, width: 2)),
                 enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Color(0xFF4FB3BF))),
+                    borderSide: BorderSide(color: kPrimaryDarkColor)),
+                errorBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFF60000))),
               ),
               validator: (String? value) {
                 if (value!.isEmpty) {
@@ -136,7 +161,7 @@ class _InitialFormState extends State<InitialForm> {
                 if (this._key.currentState!.validate()) {
                   _key.currentState!.save();
                   var fecha = _data.date.split('-');
-                  var hora = _data.time.split(':');
+                  var hora = _data.time.split(' ')[0].split(':');
                   DateTime fechaReserva = DateTime(
                       int.parse(fecha[2]),
                       int.parse(fecha[1]),
@@ -149,7 +174,7 @@ class _InitialFormState extends State<InitialForm> {
               },
               style: ButtonStyle(
                   backgroundColor:
-                      MaterialStateProperty.all<Color>(Color(0xFF4AB3BF))),
+                      MaterialStateProperty.all<Color>(kPrimaryDarkColor)),
               child: const Text('Continuar'))
         ],
       ),

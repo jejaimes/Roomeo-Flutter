@@ -43,21 +43,27 @@ class BuidlingButtons extends StatelessWidget {
         ));
         buildingsWidget.add(SizedBox(height: 20));
       });
-      return ListView(
-        children: buildingsWidget,
-      );
+      return Expanded(
+          flex: 12,
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(6, 0, 6, 4),
+            children: buildingsWidget,
+          ));
     } else {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('Cargando edificios...'),
-          Center(
-            child: CircularProgressIndicator(
-              backgroundColor: kPrimaryColor,
-            ),
-          )
-        ],
-      );
+      return Expanded(
+          flex: 12,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Cargando edificios...'),
+              SizedBox(height: 20),
+              Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryDarkColor,
+                ),
+              )
+            ],
+          ));
     }
   }
 }
