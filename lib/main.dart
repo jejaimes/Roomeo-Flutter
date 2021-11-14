@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/Welcome/welcome_screen.dart';
 import 'package:sprint2/View_Models/qr_viewModel.dart';
+import 'package:sprint2/View_Models/viewPerBuilding_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 
 import 'View/Screens/Home/home_screen.dart';
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: BuildingViewModel()),
         ChangeNotifierProvider.value(value: QRViewModel()),
+        ChangeNotifierProvider.value(value: ViewPerBuildingViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
