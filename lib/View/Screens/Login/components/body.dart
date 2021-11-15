@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/Home/home_screen.dart';
 import 'package:sprint2/View/Screens/Register/register_screen.dart';
 import 'package:sprint2/View/Screens/Welcome/components/background.dart';
 import 'package:sprint2/View/components/IngButton.dart';
+import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 
 class Body extends StatelessWidget {
@@ -24,8 +26,11 @@ class Body extends StatelessWidget {
     }
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
+        Provider.of<UserViewModel>(context, listen: false).setEmail('');
         print('User is currently signed out!');
       } else {
+        Provider.of<UserViewModel>(context, listen: false)
+            .setEmail(user.email!);
         Navigator.push(
           context,
           MaterialPageRoute(

@@ -29,6 +29,16 @@ class Building {
     }
     return classroomList;
   }
+
+  List<Classroom> getClassroomsExcept(List<int> exceptClassrooms) {
+    List<Classroom> result = [];
+    for (var room in classrooms) {
+      if (!exceptClassrooms.contains(room.number)) {
+        result.add(room);
+      }
+    }
+    return result;
+  }
 }
 
 class Classroom {
