@@ -7,6 +7,7 @@ import 'package:sprint2/View/Screens/ScanQR/scanQRView.dart';
 import 'package:sprint2/View/components/IngButton.dart';
 import 'package:sprint2/View/components/BuildingButtons.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
+import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 import 'package:intl/intl.dart';
 
@@ -56,6 +57,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Roomeo'),
+        backgroundColor: kPrimaryDarkColor,
         actions: [
           IconButton(
             icon: const Icon(Icons.more_horiz),
@@ -72,22 +74,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.clean_hands),
             label: 'Handwash',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Group',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt),
             label: 'ScanQR',
-            backgroundColor: Color(0xFF11929C),
+            backgroundColor: kPrimaryDarkColor,
           ),
         ],
         currentIndex: _selectedIndex,
@@ -123,18 +125,24 @@ class Edificios extends StatelessWidget {
       timeLastHW = new Duration(
           days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
     });
+    Provider.of<UserViewModel>(context, listen: false)
+        .setEmail(currentUser!.email!);
 
     DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);
     return Column(children: <Widget>[
-      TextField(
-          enabled: false,
-          decoration: InputDecoration(
-            labelText: "La fecha de hoy es: " + formattedDate,
-            fillColor: kPrimaryLightColor,
-            labelStyle: TextStyle(color: Colors.black),
+      Expanded(
+          flex: 2,
+          child: Container(
+            child: TextField(
+                enabled: false,
+                decoration: InputDecoration(
+                  labelText: "La fecha de hoy es: " + formattedDate,
+                  fillColor: kPrimaryLightColor,
+                  labelStyle: TextStyle(color: Colors.black),
+                )),
           )),
-      SizedBox(height: 20),
+      //Expanded(child: SizedBox(height: 20)),
       /*BuildingButton(
         text: 'ML',
         press: () {

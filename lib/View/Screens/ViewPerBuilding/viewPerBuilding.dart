@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/Models/building_model.dart';
 import 'package:sprint2/View_Models/viewPerBuilding_viewModel.dart';
+import 'package:sprint2/constraints.dart';
 
 class ViewPerBuildingWidget extends StatefulWidget {
   final String? building;
@@ -105,10 +106,11 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(child: Text('Cargando salones...')),
+                SizedBox(height: 20),
                 Expanded(
                     child: Center(
                   child: CircularProgressIndicator(
-                    backgroundColor: Colors.teal,
+                    backgroundColor: kPrimaryDarkColor,
                   ),
                 ))
               ],

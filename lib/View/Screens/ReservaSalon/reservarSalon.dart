@@ -1,7 +1,10 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:sprint2/Models/building_model.dart';
-import 'package:sprint2/View/Screens/ReservaSalon/components/SeleccionarSalon.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:sprint2/View/Screens/ReservaSalon/components/form.dart';
+import 'package:sprint2/View/components/noConnectionWidget.dart';
 
 class ReservarSalonWidget extends StatefulWidget {
   @override
@@ -9,102 +12,55 @@ class ReservarSalonWidget extends StatefulWidget {
 }
 
 class _ReservarSalonWidgetState extends State<ReservarSalonWidget> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  DateTime? fecha;
+  ConnectivityResult _connectionStatus = ConnectivityResult.wifi;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
-  CollectionReference buildings =
-      FirebaseFirestore.instance.collection('Buildings');
-  final _classroms = <Classroom>[];
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
 
-  void _reservarSalon(DateTime fecha, List<Classroom> classroomsList) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return SeleccionarSalon(
-        dateTime: fecha,
-        classroms: classroomsList,
-      );
-    }));
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  void initConnectivity() async {
+    late ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    setState(() {
+      _connectionStatus = result;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: buildings.get(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
-
-        if (snapshot.hasData && !snapshot.data!.docs.isNotEmpty) {
-          return Text("Document does not exist in the Collection");
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          print(snapshot.data!.docs);
-          snapshot.data!.docs.map((e) {
-            e.get('classrooms').map((obj) => _classroms.add(Classroom(
-                number: obj['number'],
-                maxCap: obj['maxCap'],
-                currentCap: obj['currentCap'])));
-          });
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Reservar salón'),
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.black,
-              flexibleSpace: Image.asset(
-                "assets/images/W.png",
-                fit: BoxFit.cover,
-              ),
-            ),
-            body: Center(
-              child: Column(
-                children: <Widget>[
-                  const Text(
-                    'Por favor seleccione fecha y hora de la reserva',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Fecha y Hora',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        InputDatePickerFormField(
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2022),
-                          fieldHintText: 'yyyy-mm-dd h:m:s',
-                          onDateSaved: (DateTime value) {
-                            fecha = value;
-                          },
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Validate will return true if the form is valid, or false if
-                              // the form is invalid.
-                              if (_formKey.currentState!.validate()) {
-                                _reservarSalon(fecha!, _classroms);
-                              }
-                            },
-                            child: const Text('Continuar'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        }
-
-        return Text("loading");
-      },
+    return Padding(
+      padding: EdgeInsets.all(25.0),
+      child: _connectionStatus == ConnectivityResult.none
+          ? NoConnectionWidget()
+          : InitialForm(),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sprint2/Models/building_repository.dart';
 
-class QRViewModel with ChangeNotifier {
+class QRViewModel extends ChangeNotifier {
   BuildingRepository _buildingRepository = BuildingRepository();
 
   QRViewModel();
