@@ -1,7 +1,12 @@
 // ignore: import_of_legacy_library_into_null_safe
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/ReservaSalon/components/loading.dart';
+import 'package:sprint2/View/components/noConnectionWidget.dart';
 import 'package:sprint2/View_Models/seleccionarSalon_viewModel.dart';
 import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
@@ -15,6 +20,51 @@ class SeleccionarSalon extends StatefulWidget {
 }
 
 class _SeleccionarSalonState extends State<SeleccionarSalon> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.wifi;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  void initConnectivity() async {
+    late ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (result == ConnectivityResult.none) {
+      Navigator.of(context).pop();
+    }
+    setState(() {
+      _connectionStatus = result;
+    });
+  }
+
   Widget _buildRow(String salon) {
     return ListTile(
       title: Row(
@@ -40,21 +90,29 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
   @override
   Widget build(BuildContext context) {
     var selectClassrooms = context.watch<SeleccionarsalonViewModel>();
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Seleccionar salón'),
-        backgroundColor: kPrimaryDarkColor,
-      ),
-      body: (selectClassrooms.classrooms.isNotEmpty)
-          ? _buildClassooms(selectClassrooms.classrooms)
-          : Builder(builder: (BuildContext context) {
-              Provider.of<SeleccionarsalonViewModel>(context, listen: false)
-                  .getClassroomsWithNoReservesAtTime(widget.dateTime!.month,
-                      widget.dateTime!.day, widget.dateTime!.hour);
-              print({'desde SeleccionarSalon', selectClassrooms.classrooms});
-              return LoadingWidget();
-            }),
-    );
+    return _connectionStatus == ConnectivityResult.none
+        ? NoConnectionWidget()
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text('Seleccionar salón'),
+              backgroundColor: kPrimaryDarkColor,
+            ),
+            body: (selectClassrooms.classrooms.isNotEmpty)
+                ? _buildClassooms(selectClassrooms.classrooms)
+                : Builder(builder: (BuildContext context) {
+                    Provider.of<SeleccionarsalonViewModel>(context,
+                            listen: false)
+                        .getClassroomsWithNoReservesAtTime(
+                            widget.dateTime!.month,
+                            widget.dateTime!.day,
+                            widget.dateTime!.hour);
+                    print({
+                      'desde SeleccionarSalon',
+                      selectClassrooms.classrooms
+                    });
+                    return LoadingWidget();
+                  }),
+          );
   }
 
   Widget _btnReservarSalon(String salon) {
