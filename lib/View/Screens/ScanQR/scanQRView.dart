@@ -53,7 +53,10 @@ class _ScanQRViewState extends State<ScanQRView> {
 
   Widget _codeScanned(BuildContext context) {
     return _connectionStatus == ConnectivityResult.none
-        ? NoConnectionWidget()
+        ? Padding(
+            padding: EdgeInsets.all(20),
+            child: NoConnectionWidget(),
+          )
         : result != null
             ? AlertDialog(
                 title: const Text('Registrar ingreso al salón'),
