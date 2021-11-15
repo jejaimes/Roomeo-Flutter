@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/ReservaSalon/reservarSalon.dart';
@@ -7,9 +8,9 @@ import 'package:sprint2/View/Screens/ScanQR/scanQRView.dart';
 import 'package:sprint2/View/components/IngButton.dart';
 import 'package:sprint2/View/components/BuildingButtons.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
-import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 import 'package:intl/intl.dart';
+import 'package:sprint2/main.dart';
 
 Duration timeLastHW = new Duration();
 
@@ -57,12 +58,46 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Roomeo'),
-        backgroundColor: kPrimaryDarkColor,
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_horiz),
-            onPressed: () {},
-            tooltip: 'Saved Suggestions',
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('Do you want to exit this application?'),
+                      content: Text('We hate to see you leave...'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop(false);
+                          },
+                          child: Text('No'),
+                        ),
+                        TextButton(
+                          onPressed: () async {
+                            await FirebaseAuth.instance.signOut();
+                            NavigatorState navigatorState =
+                                Navigator.of(this.context);
+                            while (navigatorState.canPop()) {
+                              navigatorState.pop();
+                            }
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                return LandingPage();
+                              }),
+                            );
+                          },
+                          child: Text('Sign Out'),
+                        ),
+                      ],
+                    );
+                  });
+            },
           ),
         ],
       ),
@@ -74,22 +109,22 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
-            backgroundColor: kPrimaryDarkColor,
+            backgroundColor: Color(0xFF11929C),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.clean_hands),
             label: 'Handwash',
-            backgroundColor: kPrimaryDarkColor,
+            backgroundColor: Color(0xFF11929C),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
             label: 'Group',
-            backgroundColor: kPrimaryDarkColor,
+            backgroundColor: Color(0xFF11929C),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt),
             label: 'ScanQR',
-            backgroundColor: kPrimaryDarkColor,
+            backgroundColor: Color(0xFF11929C),
           ),
         ],
         currentIndex: _selectedIndex,
@@ -115,34 +150,30 @@ class Edificios extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseFirestore.instance
-        .collection('Users')
-        .doc(currentUser!.email)
-        .get()
-        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-      lastHW = int.parse(documentSnapshot.data()!["LastHW"]);
-      lastHW = tiempo - lastHW;
-      timeLastHW = new Duration(
-          days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
-    });
-    Provider.of<UserViewModel>(context, listen: false)
-        .setEmail(currentUser!.email!);
+    if (currentUser != null) {
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(currentUser!.email)
+          .get()
+          .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+        lastHW = int.parse(documentSnapshot.data()!["LastHW"]);
+        lastHW = tiempo - lastHW;
+        timeLastHW = new Duration(
+            days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
+      });
+    }
 
     DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);
     return Column(children: <Widget>[
-      Expanded(
-          flex: 2,
-          child: Container(
-            child: TextField(
-                enabled: false,
-                decoration: InputDecoration(
-                  labelText: "La fecha de hoy es: " + formattedDate,
-                  fillColor: kPrimaryLightColor,
-                  labelStyle: TextStyle(color: Colors.black),
-                )),
+      TextField(
+          enabled: false,
+          decoration: InputDecoration(
+            labelText: "La fecha de hoy es: " + formattedDate,
+            fillColor: kPrimaryLightColor,
+            labelStyle: TextStyle(color: Colors.black),
           )),
-      //Expanded(child: SizedBox(height: 20)),
+      SizedBox(height: 20),
       /*BuildingButton(
         text: 'ML',
         press: () {
