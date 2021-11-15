@@ -1,13 +1,18 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View/Screens/ReservaSalon/reservarSalon.dart';
 import 'package:sprint2/View/Screens/ScanQR/scanQRView.dart';
 import 'package:sprint2/View/components/IngButton.dart';
 import 'package:sprint2/View/components/BuildingButtons.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
+import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 import 'package:intl/intl.dart';
 import 'package:sprint2/main.dart';
@@ -57,6 +62,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: kPrimaryDarkColor,
         title: const Text('Roomeo'),
         actions: [
           IconButton(
@@ -135,106 +141,129 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-class Edificios extends StatelessWidget {
-  Edificios({
-    Key? key,
-    required this.optionStyle,
-  }) : super(key: key);
+class Edificios extends StatefulWidget {
+  final optionStyle;
 
-  final TextStyle optionStyle;
+  const Edificios({Key? key, this.optionStyle}) : super(key: key);
+
+  @override
+  _EdificiosState createState() => _EdificiosState();
+}
+
+class _EdificiosState extends State<Edificios> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.wifi;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
   User? currentUser = FirebaseAuth.instance.currentUser;
   int tiempo = DateTime.now().millisecondsSinceEpoch;
-
   int lastHW = 0;
 
   @override
   Widget build(BuildContext context) {
-    if (currentUser != null) {
-      FirebaseFirestore.instance
-          .collection('Users')
-          .doc(currentUser!.email)
-          .get()
-          .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-        lastHW = int.parse(documentSnapshot.data()!["LastHW"]);
-        lastHW = tiempo - lastHW;
-        timeLastHW = new Duration(
-            days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
-      });
-    }
+    FirebaseFirestore.instance
+        .collection('Users')
+        .doc(currentUser!.email)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      lastHW = int.parse(documentSnapshot.data()!["LastHW"]);
+      lastHW = tiempo - lastHW;
+      timeLastHW = new Duration(
+          days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
+    });
+    Provider.of<UserViewModel>(context, listen: false)
+        .setEmail(currentUser!.email!);
 
     DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);
+
     return Column(children: <Widget>[
-      TextField(
-          enabled: false,
-          decoration: InputDecoration(
-            labelText: "La fecha de hoy es: " + formattedDate,
-            fillColor: kPrimaryLightColor,
-            labelStyle: TextStyle(color: Colors.black),
+      Expanded(
+          flex: 2,
+          child: Container(
+            child: TextField(
+                enabled: false,
+                decoration: InputDecoration(
+                  labelText: "La fecha de hoy es: " + formattedDate,
+                  fillColor: kPrimaryLightColor,
+                  labelStyle: TextStyle(color: Colors.black),
+                )),
           )),
-      SizedBox(height: 20),
-      /*BuildingButton(
-        text: 'ML',
-        press: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return ViewPerBuildingWidget(
-              building: 'ML',
-            );
-          }));
-        },
-        codigo: "ML",
-      ),
-      SizedBox(height: 20),
-      BuildingButton(
-        text: 'W',
-        press: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return ViewPerBuildingWidget(
-              building: 'W',
-            );
-          }));
-        },
-        codigo: "W",
-      ),
-      SizedBox(height: 20),
-      BuildingButton(
-        text: 'C',
-        press: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return ViewPerBuildingWidget(
-              building: 'C',
-            );
-          }));
-        },
-        codigo: "C",
-      ),
-      SizedBox(height: 20),
-      BuildingButton(
-        text: 'RGD',
-        press: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return ViewPerBuildingWidget(
-              building: 'RGD',
-            );
-          }));
-        },
-        codigo: "RGD",
-      ),
-      SizedBox(height: 20),
-      BuildingButton(
-        text: 'SD',
-        press: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return ViewPerBuildingWidget(
-              building: 'SD',
-            );
-          }));
-        },
-        codigo: "SD",
-      ),*/
       BuidlingButtons(),
     ]);
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  void initConnectivity() async {
+    late ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (result == ConnectivityResult.none &&
+        _connectionStatus != ConnectivityResult.none) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Sin conexión'),
+              content: Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child: Icon(
+                        Icons.cloud_off_rounded,
+                        color: kPrimaryColor,
+                        size: 50,
+                      ),
+                    ),
+                    Text(
+                      'Se acaba de perder la conexión, la información que se presenta podría estar actualizada. Cuando se restablezca la conexión se actualizará la información.',
+                      overflow: TextOverflow.visible,
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Aceptar'))
+              ],
+            );
+          });
+    }
+    setState(() {
+      _connectionStatus = result;
+    });
   }
 }
 
