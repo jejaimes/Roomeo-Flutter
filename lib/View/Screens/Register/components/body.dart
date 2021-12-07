@@ -25,7 +25,7 @@ class Body extends StatelessWidget {
           return AlertDialog(
             // Retrieve the text the user has entered by using the
             // TextEditingController.
-            content: Text("The user registered correctly!\nPlease log in now"),
+            content: Text("El usuario se registro correctamente\nYa puedes entrar a la aplicación!"),
           );
         },
       );
@@ -86,7 +86,7 @@ class Body extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 20),
           Text(
-            "Register to Roomeo",
+            "Registra te en Roomeo",
             style: TextStyle(
               fontWeight: FontWeight.normal,
               fontSize: size.height * 0.05,
@@ -97,7 +97,7 @@ class Body extends StatelessWidget {
             child: TextField(
               controller: nameController,
               decoration: InputDecoration(
-                hintText: "Name",
+                hintText: "Nombre",
               ),
             ),
           ),
@@ -106,7 +106,7 @@ class Body extends StatelessWidget {
             child: TextField(
               controller: iDController,
               decoration: InputDecoration(
-                hintText: "Uniandes Id",
+                hintText: "Id uniandes",
               ),
             ),
           ),
@@ -115,7 +115,7 @@ class Body extends StatelessWidget {
             child: TextField(
               controller: emailController,
               decoration: InputDecoration(
-                hintText: "Uniandes email",
+                hintText: "Correo uniandes",
               ),
             ),
           ),
@@ -124,7 +124,7 @@ class Body extends StatelessWidget {
             child: TextField(
               controller: facultyController,
               decoration: InputDecoration(
-                hintText: "Faculty",
+                hintText: "Facultad",
               ),
             ),
           ),
@@ -134,7 +134,7 @@ class Body extends StatelessWidget {
               controller: password1Controller,
               obscureText: true,
               decoration: InputDecoration(
-                hintText: "Passsword",
+                hintText: "Contraseña",
               ),
             ),
           ),
@@ -144,13 +144,13 @@ class Body extends StatelessWidget {
               controller: password2Controller,
               obscureText: true,
               decoration: InputDecoration(
-                hintText: "Repeat Passsword",
+                hintText: "Repite la contraseña",
               ),
             ),
           ),
           SizedBox(height: 30),
           IngButton(
-              text: "Register",
+              text: "Registrarse",
               press: () {
                 if (password1Controller.text == password2Controller.text) {
                   _register(
@@ -167,7 +167,7 @@ class Body extends StatelessWidget {
                       return AlertDialog(
                         // Retrieve the text the user has entered by using the
                         // TextEditingController.
-                        content: Text("The passwords do not match"),
+                        content: Text("Las contraseñas no coinciden"),
                       );
                     },
                   );
@@ -175,7 +175,7 @@ class Body extends StatelessWidget {
               }),
           SizedBox(height: 20),
           IngButton(
-              text: "Return",
+              text: "Atras",
               press: () {
                 Navigator.pop(context);
               }),

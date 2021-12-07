@@ -44,7 +44,6 @@ class LandingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SOLO EN MODO TEST HACEMOS SIGN OUT ANTES DE EMEPEZAR
     return FutureBuilder(
       future: _initialization,
       builder: (context, snapshot) {

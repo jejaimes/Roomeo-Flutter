@@ -19,15 +19,15 @@ class Body extends StatelessWidget {
           .signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        print('No encontramos un usuario con ese correo');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        print('Contraseña incorrecta');
       }
     }
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
         Provider.of<UserViewModel>(context, listen: false).setEmail('');
-        print('User is currently signed out!');
+        print('Actualmente no se ha ingresado a la plataforma');
       } else {
         Provider.of<UserViewModel>(context, listen: false)
             .setEmail(user.email!);
@@ -64,7 +64,7 @@ class Body extends StatelessWidget {
             child: TextField(
               controller: emailController,
               decoration: InputDecoration(
-                hintText: "Email",
+                hintText: "Correo",
               ),
             ),
           ),
@@ -74,7 +74,7 @@ class Body extends StatelessWidget {
               controller: passwordController,
               obscureText: true,
               decoration: InputDecoration(
-                hintText: "Passsword",
+                hintText: "Contraseña",
               ),
             ),
           ),
@@ -86,7 +86,7 @@ class Body extends StatelessWidget {
               }),
           SizedBox(height: 20),
           IngButton(
-              text: "Register",
+              text: "Registrarse",
               press: () {
                 Navigator.push(
                   context,

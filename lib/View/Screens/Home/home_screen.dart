@@ -17,13 +17,14 @@ import 'package:sprint2/constraints.dart';
 import 'package:intl/intl.dart';
 import 'package:sprint2/main.dart';
 
-Duration timeLastHW = new Duration();
+    Duration timeLastHW = new Duration();
 
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //Pide la lista del ViewModel de edificios.
+    //Pide la lista del ViewModel de Buildings.
     Provider.of<BuildingViewModel>(context, listen: false).fetchBuildingData();
+
     return Scaffold(
         body: Center(
       child: MyStatefulWidget(),
@@ -46,7 +47,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   List<Widget> _widgetOptions = <Widget>[
-    Edificios(optionStyle: optionStyle),
+    Buildings(optionStyle: optionStyle),
     HandWash(optionStyle: optionStyle),
     ReserveClassroomWidget(),
     ScanQRView(),
@@ -60,6 +61,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
+     
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryDarkColor,
@@ -72,8 +74,8 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   context: context,
                   builder: (context) {
                     return AlertDialog(
-                      title: Text('Do you want to exit this application?'),
-                      content: Text('We hate to see you leave...'),
+                      title: Text('Seguro que quieres salir de la aplicación?'),
+                      content: Text('No quisieramos que te fueras...'),
                       actions: <Widget>[
                         TextButton(
                           onPressed: () {
@@ -98,7 +100,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                               }),
                             );
                           },
-                          child: Text('Sign Out'),
+                          child: Text('Salir'),
                         ),
                       ],
                     );
@@ -141,16 +143,16 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   }
 }
 
-class Edificios extends StatefulWidget {
+class Buildings extends StatefulWidget {
   final optionStyle;
 
-  const Edificios({Key? key, this.optionStyle}) : super(key: key);
+  const Buildings({Key? key, this.optionStyle}) : super(key: key);
 
   @override
-  _EdificiosState createState() => _EdificiosState();
+  _BuildingsState createState() => _BuildingsState();
 }
 
-class _EdificiosState extends State<Edificios> {
+class _BuildingsState extends State<Buildings> {
   ConnectivityResult _connectionStatus = ConnectivityResult.wifi;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -158,9 +160,11 @@ class _EdificiosState extends State<Edificios> {
   User? currentUser = FirebaseAuth.instance.currentUser;
   int tiempo = DateTime.now().millisecondsSinceEpoch;
   int lastHW = 0;
+  
 
   @override
   Widget build(BuildContext context) {
+
     FirebaseFirestore.instance
         .collection('Users')
         .doc(currentUser!.email)
@@ -171,11 +175,11 @@ class _EdificiosState extends State<Edificios> {
       timeLastHW = new Duration(
           days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
     });
-    Provider.of<UserViewModel>(context, listen: false)
-        .setEmail(currentUser!.email!);
 
+    
     DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);
+    
 
     return Column(children: <Widget>[
       Expanded(
@@ -184,13 +188,14 @@ class _EdificiosState extends State<Edificios> {
             child: TextField(
                 enabled: false,
                 decoration: InputDecoration(
-                  labelText: "La fecha de hoy es: " + formattedDate,
+                  labelText: "La fecha de hoy es: "+ formattedDate,
                   fillColor: kPrimaryLightColor,
                   labelStyle: TextStyle(color: Colors.black),
                 )),
           )),
       BuidlingButtons(),
     ]);
+      
   }
 
   @override
@@ -199,9 +204,13 @@ class _EdificiosState extends State<Edificios> {
     super.dispose();
   }
 
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance
+        !.addPostFrameCallback((_) => Provider.of<UserViewModel>(context, listen: false)
+        .setEmail(currentUser!.email!));
     initConnectivity();
 
     _connectivitySubscription =
@@ -267,6 +276,7 @@ class _EdificiosState extends State<Edificios> {
   }
 }
 
+// ignore: must_be_immutable
 class HandWash extends StatelessWidget {
   HandWash({
     Key? key,
@@ -288,9 +298,9 @@ class HandWash extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Duration duracionMin = new Duration(
+    Duration durationMin = new Duration(
         days: 0, hours: 0, minutes: 0, seconds: 10, milliseconds: 0);
-    if (timeLastHW.compareTo(duracionMin) < 0) {
+    if (timeLastHW.compareTo(durationMin) < 0) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -307,7 +317,7 @@ class HandWash extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Time since last handwash:",
+              "Tiempo desde el último lavado de manos:",
               style: optionStyle,
             ),
             Text(
