@@ -3,15 +3,15 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sprint2/View/Screens/ReservaSalon/components/form.dart';
+import 'package:sprint2/View/Screens/ReserveClassroom/components/form.dart';
 import 'package:sprint2/View/components/noConnectionWidget.dart';
 
-class ReservarSalonWidget extends StatefulWidget {
+class ReserveClassroomWidget extends StatefulWidget {
   @override
-  _ReservarSalonWidgetState createState() => _ReservarSalonWidgetState();
+  _ReserveClassroomWidgetState createState() => _ReserveClassroomWidgetState();
 }
 
-class _ReservarSalonWidgetState extends State<ReservarSalonWidget> {
+class _ReserveClassroomWidgetState extends State<ReserveClassroomWidget> {
   ConnectivityResult _connectionStatus = ConnectivityResult.wifi;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
