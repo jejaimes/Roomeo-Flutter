@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:sprint2/View/Screens/ReservaSalon/reservarSalon.dart';
+import 'package:sprint2/View/Screens/ReserveClassroom/reserveClassroom.dart';
 import 'package:sprint2/View/Screens/ScanQR/scanQRView.dart';
 import 'package:sprint2/View/components/IngButton.dart';
 import 'package:sprint2/View/components/BuildingButtons.dart';
@@ -48,7 +48,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   List<Widget> _widgetOptions = <Widget>[
     Edificios(optionStyle: optionStyle),
     HandWash(optionStyle: optionStyle),
-    ReservarSalonWidget(),
+    ReserveClassroomWidget(),
     ScanQRView(),
   ];
 

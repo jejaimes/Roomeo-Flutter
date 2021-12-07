@@ -4,7 +4,7 @@ import 'package:sprint2/Models/building_repository.dart';
 import 'package:sprint2/Models/reserve_model.dart';
 import 'package:sprint2/Models/reserve_repository.dart';
 
-class SeleccionarsalonViewModel extends ChangeNotifier {
+class SelectClassroomViewModel extends ChangeNotifier {
   BuildingRepository _buildingRepository = BuildingRepository();
   ReserveRepository _reserveRepository = ReserveRepository();
 
@@ -19,7 +19,7 @@ class SeleccionarsalonViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  SeleccionarsalonViewModel();
+  SelectClassroomViewModel();
 
   Future<String> addPersonToRoom(String building, int classroom) {
     return _buildingRepository
@@ -35,7 +35,7 @@ class SeleccionarsalonViewModel extends ChangeNotifier {
     return _buildingRepository.fetchBuildingByName(name);
   }
 
-  Future<String> reservarSalon(int day, int hour, int minute, int month,
+  Future<String> reserveClassroom(int day, int hour, int minute, int month,
       String name, String room, int year) {
     return _reserveRepository
         .createReserve(Reserve(

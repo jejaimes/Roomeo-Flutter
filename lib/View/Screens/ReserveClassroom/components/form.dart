@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sprint2/View_Models/seleccionarSalon_viewModel.dart';
+import 'package:sprint2/View_Models/selectClassroom_viewModel.dart';
 import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
-import 'SeleccionarSalon.dart';
+import 'SelectClassroom.dart';
 
 class InitialForm extends StatefulWidget {
   const InitialForm({Key? key}) : super(key: key);
@@ -33,8 +33,8 @@ class _InitialFormState extends State<InitialForm> {
 
   void _seleccionarSalon(DateTime fecha) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      SeleccionarsalonViewModel seleccionarsalonViewModel =
-          SeleccionarsalonViewModel();
+      SelectClassroomViewModel seleccionarsalonViewModel =
+          SelectClassroomViewModel();
       seleccionarsalonViewModel.getClassroomsWithNoReservesAtTime(
           fecha.month, fecha.day, fecha.hour);
       return MultiProvider(
@@ -43,7 +43,7 @@ class _InitialFormState extends State<InitialForm> {
           ChangeNotifierProvider.value(
               value: Provider.of<UserViewModel>(context)),
         ],
-        child: SeleccionarSalon(
+        child: SelectClassroom(
           dateTime: fecha,
         ),
       );

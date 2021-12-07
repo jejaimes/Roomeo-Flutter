@@ -5,21 +5,21 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:sprint2/View/Screens/ReservaSalon/components/loading.dart';
+import 'package:sprint2/View/Screens/ReserveClassroom/components/loading.dart';
 import 'package:sprint2/View/components/noConnectionWidget.dart';
-import 'package:sprint2/View_Models/seleccionarSalon_viewModel.dart';
+import 'package:sprint2/View_Models/selectClassroom_viewModel.dart';
 import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 
-class SeleccionarSalon extends StatefulWidget {
+class SelectClassroom extends StatefulWidget {
   final DateTime? dateTime;
-  SeleccionarSalon({Key? key, this.dateTime}) : super(key: key);
+  SelectClassroom({Key? key, this.dateTime}) : super(key: key);
 
   @override
-  _SeleccionarSalonState createState() => _SeleccionarSalonState();
+  _SelectClassroomState createState() => _SelectClassroomState();
 }
 
-class _SeleccionarSalonState extends State<SeleccionarSalon> {
+class _SelectClassroomState extends State<SelectClassroom> {
   ConnectivityResult _connectionStatus = ConnectivityResult.wifi;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
@@ -65,12 +65,12 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
     });
   }
 
-  Widget _buildRow(String salon) {
+  Widget _buildRow(String classroom) {
     return ListTile(
       title: Row(
         children: <Widget>[
-          Expanded(child: Text(salon)),
-          Expanded(child: Container(child: _btnReservarSalon(salon)))
+          Expanded(child: Text(classroom)),
+          Expanded(child: Container(child: _btnReservarClassroom(classroom)))
         ],
       ),
     );
@@ -89,7 +89,7 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
 
   @override
   Widget build(BuildContext context) {
-    var selectClassrooms = context.watch<SeleccionarsalonViewModel>();
+    var selectClassrooms = context.watch<SelectClassroomViewModel>();
     return _connectionStatus == ConnectivityResult.none
         ? NoConnectionWidget()
         : Scaffold(
@@ -100,14 +100,14 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
             body: (selectClassrooms.classrooms.isNotEmpty)
                 ? _buildClassooms(selectClassrooms.classrooms)
                 : Builder(builder: (BuildContext context) {
-                    Provider.of<SeleccionarsalonViewModel>(context,
+                    Provider.of<SelectClassroomViewModel>(context,
                             listen: false)
                         .getClassroomsWithNoReservesAtTime(
                             widget.dateTime!.month,
                             widget.dateTime!.day,
                             widget.dateTime!.hour);
                     print({
-                      'desde SeleccionarSalon',
+                      'desde SeleccionarClassroom',
                       selectClassrooms.classrooms
                     });
                     return LoadingWidget();
@@ -115,7 +115,7 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
           );
   }
 
-  Widget _btnReservarSalon(String salon) {
+  Widget _btnReservarClassroom(String classroom) {
     return OutlinedButton(
       onPressed: () {
         showDialog<String>(
@@ -130,7 +130,7 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
-                    Text('Seguro que desea reservar el salón $salon?'),
+                    Text('Seguro que desea reservar el salón $classroom?'),
                   ],
                 ),
               ),
@@ -139,16 +139,16 @@ class _SeleccionarSalonState extends State<SeleccionarSalon> {
                   child: const Text('Aceptar'),
                   onPressed: () {
                     try {
-                      Provider.of<SeleccionarsalonViewModel>(context,
+                      Provider.of<SelectClassroomViewModel>(context,
                               listen: false)
-                          .reservarSalon(
+                          .reserveClassroom(
                               widget.dateTime!.day,
                               widget.dateTime!.hour,
                               widget.dateTime!.minute,
                               widget.dateTime!.month,
                               Provider.of<UserViewModel>(context, listen: false)
                                   .getEmail(),
-                              salon,
+                              classroom,
                               widget.dateTime!.year)
                           .then((res) => ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(

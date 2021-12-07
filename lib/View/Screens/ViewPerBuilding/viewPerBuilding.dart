@@ -64,7 +64,7 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
     });
   }
 
-  Widget _btnVerReservasSalon(Classroom salon) {
+  Widget _btnAssistToClassroom(Classroom classroom) {
     return OutlinedButton(
       onPressed: () => _connectionStatus == ConnectivityResult.none
           ? ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -74,7 +74,7 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
           : showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
-                title: Text('Salón ${salon.number.toString()}'),
+                title: Text('Salón ${classroom.number.toString()}'),
                 content: const Text('¿Va a asistir al salón?'),
                 actions: <Widget>[
                   TextButton(
@@ -85,7 +85,7 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
                     onPressed: () {
                       Provider.of<ViewPerBuildingViewModel>(context,
                               listen: false)
-                          .addPersonToRoom(widget.building!, salon.number)
+                          .addPersonToRoom(widget.building!, classroom.number)
                           .then((res) {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -108,15 +108,15 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
     );
   }
 
-  Widget _buildRow(Classroom salon) {
+  Widget _buildRow(Classroom classroom) {
     return ListTile(
       leading: Text(
-        '${widget.building} - ${salon.number}',
+        '${widget.building} - ${classroom.number}',
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
       title: Row(
         children: <Widget>[
-          Text('${salon.currentCap}/${salon.maxCap}',
+          Text('${classroom.currentCap}/${classroom.maxCap}',
               style: TextStyle(
                 fontSize: 20,
               )),
@@ -126,7 +126,7 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
           ),
         ],
       ),
-      trailing: _btnVerReservasSalon(salon),
+      trailing: _btnAssistToClassroom(classroom),
     );
   }
 
@@ -156,7 +156,7 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Expanded(child: Text('Cargando salones...')),
+                Expanded(child: Text('Cargando classroomes...')),
                 SizedBox(height: 20),
                 Expanded(
                     child: Center(
@@ -190,7 +190,7 @@ class _ViewPerBuildingWidgetState extends State<ViewPerBuildingWidget> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Expanded(child: Text('Cargando salones...')),
+              Expanded(child: Text('Cargando classroomes...')),
               Expanded(
                   child: Center(
                 child: CircularProgressIndicator(
