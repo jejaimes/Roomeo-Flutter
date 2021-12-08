@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:sprint2/constraints.dart';
 
 class PhotoItem {
   final String image;
@@ -13,8 +18,8 @@ class CustomCacheManager {
   static CacheManager instance = CacheManager(
     Config(
       key,
-      stalePeriod: const Duration(days: 1),
-      maxNrOfCacheObjects: 10,
+      stalePeriod: const Duration(seconds: 10),
+      maxNrOfCacheObjects: 1,
     ),
   );
 }
@@ -63,33 +68,42 @@ class careInfoView extends StatefulWidget {
 }
 
 class _careInfoViewState extends State<careInfoView> {
+  ConnectivityResult _connectionStatus = ConnectivityResult.wifi;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
   int typeOfPoster = 0;
   List<PhotoItem> currentList = _items[0];
   @override
   Widget build(BuildContext context) {
+    CustomCacheManager.instance.emptyCache();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Covid information and recomendation'),
+        title: Text('Información oficial sobre el Covid-19'),
+        backgroundColor: Colors.blue,
       ),
       body: SafeArea(
         child: Column(
           children: [
             ButtonBar(
+              buttonPadding: new EdgeInsets.only(left: 30),
               alignment: MainAxisAlignment.center,
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.home),
-                  highlightColor: Color(0xFFFF9000),
+                  color: Colors.deepPurple,
+                  highlightColor: Colors.deepPurple,
                   onPressed: () => {
                     setState(() {
                       typeOfPoster = 0;
                       currentList = _items[typeOfPoster];
                     })
                   },
-                  focusColor: Color(0xFFFF9000),
                 ),
                 IconButton(
                   icon: Icon(Icons.school),
+                  color: Colors.green,
+                  highlightColor: Colors.green,
                   onPressed: () => {
                     setState(() {
                       typeOfPoster = 1;
@@ -98,7 +112,9 @@ class _careInfoViewState extends State<careInfoView> {
                   },
                 ),
                 IconButton(
-                  icon: Icon(Icons.local_hospital),
+                  color: Colors.red,
+                  highlightColor: Colors.red,
+                  icon: Icon(Icons.local_hospital_outlined),
                   onPressed: () => {
                     setState(() {
                       typeOfPoster = 2;
@@ -140,7 +156,13 @@ class _careInfoViewState extends State<careInfoView> {
                       ),
                       placeholder: (context, url) =>
                           CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      errorWidget: (context, url, error) => Column(
+                        children: [
+                          Icon(Icons.error),
+                          Text(
+                              "No se ha podido cargar la imagen\nPor favor revisa tu conexión a internet")
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -150,6 +172,80 @@ class _careInfoViewState extends State<careInfoView> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    initConnectivity();
+
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  void initConnectivity() async {
+    late ConnectivityResult result;
+
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+      return;
+    }
+
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    if (result == ConnectivityResult.none &&
+        _connectionStatus != ConnectivityResult.none) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Sin conexión'),
+              content: Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: ListView(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(),
+                      child: Icon(
+                        Icons.cloud_off_rounded,
+                        color: kPrimaryColor,
+                      ),
+                    ),
+                    Text(
+                      'No hay conexión a internet. Es posible que parte de la información no este actualizada o no se haya cargado por completo.',
+                      overflow: TextOverflow.visible,
+                    ),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text('Aceptar'))
+              ],
+            );
+          });
+    }
+    setState(() {
+      _connectionStatus = result;
+    });
   }
 }
 
@@ -165,8 +261,26 @@ class RouteTwo extends StatelessWidget {
       child: Container(
         width: double.infinity,
         child: CachedNetworkImage(
+          cacheManager: CustomCacheManager.instance,
           imageUrl: image,
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          errorWidget: (context, url, error) => Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              backgroundColor: kPrimaryDarkColor,
+              title: Center(
+              child: Text('Error cargando imagen'),
+            ),
+            ),
+            body: Center(
+              child: Column(children: [
+                Icon(Icons.error),
+                Text(
+                  "La imagén no se ha podido cargar de manera correcta por favor revisa tu conexión a internet.",
+                  textAlign: TextAlign.center,
+                ),
+              ]),
+            ),
+          ),
         ),
       ),
     );
