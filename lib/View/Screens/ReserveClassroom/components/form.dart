@@ -31,12 +31,12 @@ class _InitialFormState extends State<InitialForm> {
     super.dispose();
   }
 
-  void _seleccionarSalon(DateTime fecha) {
+  void _seleccionarSalon(DateTime datereserve) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       SelectClassroomViewModel seleccionarsalonViewModel =
           SelectClassroomViewModel();
       seleccionarsalonViewModel.getClassroomsWithNoReservesAtTime(
-          fecha.month, fecha.day, fecha.hour);
+          datereserve.month, datereserve.day, datereserve.hour);
       return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(value: seleccionarsalonViewModel),
@@ -44,7 +44,7 @@ class _InitialFormState extends State<InitialForm> {
               value: Provider.of<UserViewModel>(context)),
         ],
         child: SelectClassroom(
-          dateTime: fecha,
+          dateTime: datereserve,
         ),
       );
     }));
@@ -160,19 +160,31 @@ class _InitialFormState extends State<InitialForm> {
               onPressed: () {
                 if (this._key.currentState!.validate()) {
                   _key.currentState!.save();
-                  var amOrPm = _data.time.split(' ')[1];
-                  var fecha = DateTime.parse(_data.date);
-                  var hora = _data.time.split(' ')[0].split(':');
-                  DateTime fechaReserva = DateTime(
-                      fecha.year,
-                      fecha.month,
-                      fecha.day,
-                      amOrPm == 'AM'
-                          ? int.parse(hora[0])
-                          : int.parse(hora[0]) + 12,
-                      int.parse(hora[1]));
-                  print({'fechaReserva': fechaReserva});
-                  _seleccionarSalon(fechaReserva);
+                  DateTime dateTimeReservation;
+                  if (_data.time.split(' ').length > 1) {
+                    var amOrPm = _data.time.split(' ')[1];
+                    var datereserve = DateTime.parse(_data.date);
+                    var time = _data.time.split(' ')[0].split(':');
+                    dateTimeReservation = DateTime(
+                        datereserve.year,
+                        datereserve.month,
+                        datereserve.day,
+                        amOrPm == 'AM'
+                            ? int.parse(time[0])
+                            : int.parse(time[0]) + 12,
+                        int.parse(time[1]));
+                  } else {
+                    var datereserve = DateTime.parse(_data.date);
+                    var time = _data.time.split(':');
+                    dateTimeReservation = DateTime(
+                        datereserve.year,
+                        datereserve.month,
+                        datereserve.day,
+                        int.parse(time[0]),
+                        int.parse(time[1]));
+                  }
+                  print({'dateTimeReservation': dateTimeReservation});
+                  _seleccionarSalon(dateTimeReservation);
                 }
               },
               style: ButtonStyle(

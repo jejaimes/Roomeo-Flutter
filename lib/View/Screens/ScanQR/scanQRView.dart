@@ -71,13 +71,20 @@ class _ScanQRViewState extends State<ScanQRView> {
                   TextButton(
                     child: const Text('Aceptar'),
                     onPressed: () {
-                      List<String> res = result!.code!.split('-');
-                      Provider.of<QRViewModel>(context, listen: false)
-                          .addPersonToRoom(res[0], int.parse(res[1]))
-                          .then((res) => ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                                  duration: Duration(milliseconds: 2000),
-                                  content: Text(res))));
+                      if (result!.code!.length == 6 ||
+                          result!.code!.length == 5) {
+                        List<String> res = result!.code!.split('-');
+                        Provider.of<QRViewModel>(context, listen: false)
+                            .addPersonToRoom(res[0], int.parse(res[1]))
+                            .then((res) => ScaffoldMessenger.of(context)
+                                .showSnackBar(SnackBar(
+                                    duration: Duration(milliseconds: 2000),
+                                    content: Text(res))));
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            duration: Duration(milliseconds: 2000),
+                            content: Text('El salón no es válido')));
+                      }
                       setState(() {
                         controller!.stopCamera();
                         result = null;
