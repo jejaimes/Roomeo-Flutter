@@ -10,14 +10,6 @@ class ReserveRepository {
     return response;
   }
 
-  List<Reserve>? fetchRealTimeReservesList() {
-    List<Reserve> updatedReserves = [];
-    _reserveService.listenToReservesRealTime().listen((reserveData) {
-      updatedReserves = reserveData;
-    });
-    return updatedReserves;
-  }
-
   Future<List<Map<String, dynamic>>> fetchClassroomsWithReservesAtTime(
       int month, int day, int hour) async {
     List<Reserve> apiResponse =

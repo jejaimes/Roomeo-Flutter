@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,10 +15,9 @@ import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 import 'package:intl/intl.dart';
 import 'package:sprint2/main.dart';
-
 import 'components/careInfoView.dart';
 
-    Duration timeLastHW = new Duration();
+Duration timeLastHW = new Duration();
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -64,7 +62,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
 
   @override
   Widget build(BuildContext context) {
-     
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryDarkColor,
@@ -168,11 +165,9 @@ class _BuildingsState extends State<Buildings> {
   User? currentUser = FirebaseAuth.instance.currentUser;
   int tiempo = DateTime.now().millisecondsSinceEpoch;
   int lastHW = 0;
-  
 
   @override
   Widget build(BuildContext context) {
-
     FirebaseFirestore.instance
         .collection('Users')
         .doc(currentUser!.email)
@@ -184,10 +179,8 @@ class _BuildingsState extends State<Buildings> {
           days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastHW);
     });
 
-    
     DateTime hoy = DateTime.now();
     String formattedDate = DateFormat('yyyy-MM-dd – kk:mm').format(hoy);
-    
 
     return Column(children: <Widget>[
       Expanded(
@@ -196,14 +189,13 @@ class _BuildingsState extends State<Buildings> {
             child: TextField(
                 enabled: false,
                 decoration: InputDecoration(
-                  labelText: "La fecha de hoy es: "+ formattedDate,
+                  labelText: "La fecha de hoy es: " + formattedDate,
                   fillColor: kPrimaryLightColor,
                   labelStyle: TextStyle(color: Colors.black),
                 )),
           )),
       BuidlingButtons(),
     ]);
-      
   }
 
   @override
@@ -212,13 +204,12 @@ class _BuildingsState extends State<Buildings> {
     super.dispose();
   }
 
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        !.addPostFrameCallback((_) => Provider.of<UserViewModel>(context, listen: false)
-        .setEmail(currentUser!.email!));
+    WidgetsBinding.instance!.addPostFrameCallback((_) =>
+        Provider.of<UserViewModel>(context, listen: false)
+            .setEmail(currentUser!.email!));
     initConnectivity();
 
     _connectivitySubscription =
@@ -243,7 +234,7 @@ class _BuildingsState extends State<Buildings> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    Size size= MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
     if (result == ConnectivityResult.none &&
         _connectionStatus != ConnectivityResult.none) {
       showDialog(
@@ -254,7 +245,7 @@ class _BuildingsState extends State<Buildings> {
               title: const Text('Sin conexión'),
               content: Container(
                 height: size.height * 0.25,
-                width: size.width*0.25,
+                width: size.width * 0.25,
                 child: ListView(
                   children: [
                     Padding(

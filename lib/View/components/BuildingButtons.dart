@@ -7,7 +7,6 @@ import 'package:sprint2/View/components/BuildingButton.dart';
 import 'package:provider/provider.dart';
 import 'package:sprint2/View_Models/building_viewModel.dart';
 import 'package:sprint2/constraints.dart';
-
 import 'BuildingButton.dart';
 
 // ignore: must_be_immutable
@@ -29,7 +28,9 @@ class BuidlingButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     createBuildingList(context);
     if (buildings != null) {
-      buildings!.forEach((building) {
+      Building building;
+      for (int i = 0; i < buildings!.length; i++) {
+        building = buildings![i];
         buildingsWidget.add(new BuildingButton(
           text: building.name.toUpperCase(),
           press: () {
@@ -42,7 +43,7 @@ class BuidlingButtons extends StatelessWidget {
           codigo: building.name.toUpperCase(),
         ));
         buildingsWidget.add(SizedBox(height: 20));
-      });
+      }
       return Expanded(
           flex: 12,
           child: ListView(

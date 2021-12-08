@@ -28,13 +28,6 @@ class ReserveViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchRealTimeReserveData() {
-    List<Reserve>? reserveList = _reserveRepository.fetchRealTimeReservesList();
-    if (reserveList != null && reserveList.isEmpty) {
-      _apiResponse = ApiResponse.completed(reserveList);
-    }
-  }
-
   void setSelectedReserve(Reserve reserve) {
     _reserve = reserve;
     notifyListeners();

@@ -5,20 +5,6 @@ import '../reserve_model.dart';
 class ReserveService {
   late CollectionReference<Map<String, dynamic>> _reserves =
       FirebaseFirestore.instance.collection('reserves');
-  final StreamController<List<Reserve>> _controller =
-      StreamController<List<Reserve>>.broadcast();
-
-  Stream listenToReservesRealTime() {
-    _reserves.snapshots().listen((reserveSnapshot) {
-      if (reserveSnapshot.docs.isNotEmpty) {
-        var _newReserves = reserveSnapshot.docs
-            .map((snapshot) => Reserve.fromJson(snapshot.data()))
-            .toList();
-        _controller.add(_newReserves);
-      }
-    });
-    return _controller.stream;
-  }
 
   Future<List<Reserve>> get() async {
     Reserve reserve;
@@ -87,14 +73,6 @@ class ReserveService {
         .add(newReserve.toJson())
         .then((value) => 'Reserva creada exitosamente')
         .catchError((error) => "$error");
-  }
-
-  Future<void> deleteReserve(String idReserve) async {
-    return await _reserves
-        .doc(idReserve)
-        .delete()
-        .then((value) => print("Reserve deleted"))
-        .catchError((error) => print('Failed to delete the reserve: $error'));
   }
 
   Future<String> updateReserve(Reserve reserve) async {
