@@ -97,11 +97,11 @@ class ReserveService {
         .catchError((error) => print('Failed to delete the reserve: $error'));
   }
 
-  Future<void> updateReserve(Reserve reserve) async {
+  Future<String> updateReserve(Reserve reserve) async {
     return await _reserves
         .doc(reserve.documentId)
         .update(reserve.toJson())
-        .then((value) => print('Reserve updated'))
-        .catchError((error) => print('Failed to update the reserve: $error'));
+        .then((value) => 'Reserva actualizada exitosamente')
+        .catchError((error) => 'Failed to update the reserve: $error');
   }
 }
