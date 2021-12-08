@@ -17,6 +17,8 @@ import 'package:sprint2/constraints.dart';
 import 'package:intl/intl.dart';
 import 'package:sprint2/main.dart';
 
+import 'components/careInfoView.dart';
+
     Duration timeLastHW = new Duration();
 
 class HomeScreen extends StatelessWidget {
@@ -51,6 +53,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
     HandWash(optionStyle: optionStyle),
     ReserveClassroomWidget(),
     ScanQRView(),
+    careInfoView()
   ];
 
   void _onItemTapped(int index) {
@@ -132,6 +135,11 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           BottomNavigationBarItem(
             icon: Icon(Icons.camera_alt),
             label: 'ScanQR',
+            backgroundColor: Color(0xFF11929C),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.coronavirus),
+            label: 'Coronavirus',
             backgroundColor: Color(0xFF11929C),
           ),
         ],
