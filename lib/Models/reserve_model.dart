@@ -6,6 +6,7 @@ class Reserve {
   final String name;
   final String room;
   final int year;
+  final String state;
   final String? documentId;
 
   Reserve(
@@ -16,6 +17,7 @@ class Reserve {
       required this.name,
       required this.room,
       required this.year,
+      required this.state,
       this.documentId});
 
   factory Reserve.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class Reserve {
       name: json['name'] as String,
       room: json['room'] as String,
       year: json['year'] as int,
+      state: json['state'] as String,
       documentId:
           '${json['name']}-${json['room']}-${json['day']}-${json['month']}-${json['hour']}-${json['minute']}',
     );
@@ -40,7 +43,8 @@ class Reserve {
       'month': month,
       'name': name,
       'room': room,
-      'year': year
+      'year': year,
+      'state': state
     };
   }
 }

@@ -40,4 +40,8 @@ class ReserveRepository {
   Future<String> createReserve(Reserve reserve) async {
     return await _reserveService.addReserve(reserve);
   }
+
+  Future<String> updateReserve(Reserve reserve) async {
+    return await _reserveService.updateReserve(reserve);
+  }
 }

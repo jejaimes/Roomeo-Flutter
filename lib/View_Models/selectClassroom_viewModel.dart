@@ -36,7 +36,7 @@ class SelectClassroomViewModel extends ChangeNotifier {
   }
 
   Future<String> reserveClassroom(int day, int hour, int minute, int month,
-      String name, String room, int year) {
+      String name, String room, int year, String state) {
     return _reserveRepository
         .createReserve(Reserve(
             day: day,
@@ -45,7 +45,8 @@ class SelectClassroomViewModel extends ChangeNotifier {
             month: month,
             name: name,
             room: room,
-            year: year))
+            year: year,
+            state: state))
         .then((res) => res)
         .catchError((error) => 'Hubo un error creando la reserva: $error');
   }

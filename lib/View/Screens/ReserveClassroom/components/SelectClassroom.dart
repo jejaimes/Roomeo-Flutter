@@ -149,7 +149,8 @@ class _SelectClassroomState extends State<SelectClassroom> {
                               Provider.of<UserViewModel>(context, listen: false)
                                   .getEmail(),
                               classroom,
-                              widget.dateTime!.year)
+                              widget.dateTime!.year,
+                              'Válida')
                           .then((res) => ScaffoldMessenger.of(context)
                               .showSnackBar(SnackBar(
                                   duration: Duration(milliseconds: 2000),
