@@ -243,6 +243,7 @@ class _BuildingsState extends State<Buildings> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    Size size= MediaQuery.of(context).size;
     if (result == ConnectivityResult.none &&
         _connectionStatus != ConnectivityResult.none) {
       showDialog(
@@ -252,15 +253,15 @@ class _BuildingsState extends State<Buildings> {
             return AlertDialog(
               title: const Text('Sin conexión'),
               content: Container(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: size.height * 0.25,
+                width: size.width*0.25,
                 child: ListView(
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(left: 20),
+                      padding: EdgeInsets.only(),
                       child: Icon(
                         Icons.cloud_off_rounded,
                         color: kPrimaryColor,
-                        size: 50,
                       ),
                     ),
                     Text(
