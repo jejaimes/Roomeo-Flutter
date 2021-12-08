@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:provider/provider.dart';
+import 'package:sprint2/View_Models/user_viewModel.dart';
 import 'package:sprint2/constraints.dart';
 
 class PhotoItem {
@@ -74,8 +77,56 @@ class _careInfoViewState extends State<careInfoView> {
 
   int typeOfPoster = 0;
   List<PhotoItem> currentList = _items[0];
+
+  setFrequency() {
+    String email =
+        Provider.of<UserViewModel>(context, listen: false).getEmail();
+    Duration timeLastUpdate;
+    int lastUp;
+    int tiempo = DateTime.now().millisecondsSinceEpoch;
+    double freqActual;
+
+    FirebaseFirestore.instance
+        .collection('Analytics')
+        .doc("FreqCare")
+        .collection("Users")
+        .doc(email)
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
+      freqActual=documentSnapshot.data()!["Frequency"];
+      lastUp = int.parse(documentSnapshot.data()!["lastTimeUsed"]);
+      lastUp = tiempo - lastUp;
+      timeLastUpdate = new Duration(
+          days: 0, hours: 0, minutes: 0, seconds: 0, milliseconds: lastUp);
+      Duration durationMin = new Duration(
+          days: 0, hours: 0, minutes: 0, seconds: 10, milliseconds: 0);
+      if (timeLastUpdate.compareTo(durationMin) > 0) {
+        double freq =freqActual+ 1 / lastUp ;
+
+        FirebaseFirestore.instance
+            .collection('Analytics')
+            .doc("FreqCare")
+            .collection("Users")
+            .doc(email)
+            .update({'lastTimeUsed': tiempo.toString()})
+            .then((value) => {print("Se actualizo la base de datos")})
+            .catchError((error) => print("Failed to update user: $error"));
+
+            FirebaseFirestore.instance
+            .collection('Analytics')
+            .doc("FreqCare")
+            .collection("Users")
+            .doc(email)
+            .update({'Frequency': freq})
+            .then((value) => {print("Se actualizo la base de datos")})
+            .catchError((error) => print("Failed to update user: $error"));
+      } else {}
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    setFrequency();
     CustomCacheManager.instance.emptyCache();
     return Scaffold(
       appBar: AppBar(
@@ -94,6 +145,7 @@ class _careInfoViewState extends State<careInfoView> {
                   color: Colors.deepPurple,
                   highlightColor: Colors.deepPurple,
                   onPressed: () => {
+                    setFrequency(),
                     setState(() {
                       typeOfPoster = 0;
                       currentList = _items[typeOfPoster];
@@ -105,6 +157,7 @@ class _careInfoViewState extends State<careInfoView> {
                   color: Colors.green,
                   highlightColor: Colors.green,
                   onPressed: () => {
+                    setFrequency(),
                     setState(() {
                       typeOfPoster = 1;
                       currentList = _items[typeOfPoster];
@@ -116,6 +169,7 @@ class _careInfoViewState extends State<careInfoView> {
                   highlightColor: Colors.red,
                   icon: Icon(Icons.local_hospital_outlined),
                   onPressed: () => {
+                    setFrequency(),
                     setState(() {
                       typeOfPoster = 2;
                       currentList = _items[typeOfPoster];
@@ -268,8 +322,8 @@ class RouteTwo extends StatelessWidget {
             appBar: AppBar(
               backgroundColor: kPrimaryDarkColor,
               title: Center(
-              child: Text('Error cargando imagen'),
-            ),
+                child: Text('Error cargando imagen'),
+              ),
             ),
             body: Center(
               child: Column(children: [
